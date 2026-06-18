@@ -299,7 +299,7 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
    DONNÉES — équipe, postes, codes, stockage, calcul d'heures
    Aucune notion d'argent.
    ============================================================ */
-const STORE={config:'morpheus_config_v1',planning:'morpheus_planning_v1',absences:'morpheus_absences_v1'};
+const STORE={config:'morpheus_config_v1',planning:'morpheus_planning_v1',absences:'morpheus_absences_v1',pubts:'morpheus_pubts_v1'};
 const PASTELS=[
   {bg:'#E7DCF1',fg:'#4A3A63',br:'#CDBBE4'},
   {bg:'#DEEBD7',fg:'#3F5436',br:'#BFD6B2'},
@@ -358,21 +358,32 @@ const Data={
   saveConfig(){lsSet(STORE.config,this.config);},
   savePlanning(){lsSet(STORE.planning,this.planning);},
   saveAbsences(){lsSet(STORE.absences,this.absences);},
-  async seedFromFileIfEmpty(){
-    const empty=!lsHas(STORE.planning)&&!lsHas(STORE.absences)&&!lsHas(STORE.config);
-    if(!empty)return;
+  async syncFromPublished(){
+    // Récupère le planning publié et l'applique s'il est plus récent que ce que
+    // l'appareil connaît déjà. Les visiteurs voient ainsi toujours la dernière
+    // version publiée, sans écraser des modifs locales non encore publiées.
+    let json;
     try{
       const res=await fetch('./planning-data.json',{cache:'no-store'});
-      if(!res.ok)return;
-      const json=await res.json();
-      this.applyImport(json,{silent:true});
-    }catch(e){}
+      if(!res.ok)return false;
+      json=await res.json();
+    }catch(e){return false;}
+    const localEmpty=!lsHas(STORE.planning)&&!lsHas(STORE.absences)&&!lsHas(STORE.config);
+    const pubTs=json._exportedAt||'';
+    const lastTs=lsGet(STORE.pubts,'');
+    if(localEmpty || (pubTs && pubTs>lastTs)){
+      this.applyImport(json);
+      if(pubTs)lsSet(STORE.pubts,pubTs);
+      return true;
+    }
+    return false;
   },
   async loadPublished(){
     const res=await fetch('./planning-data.json',{cache:'no-store'});
     if(!res.ok)throw new Error('Aucun planning publié trouvé.');
     const json=await res.json();
     this.applyImport(json);
+    if(json._exportedAt)lsSet(STORE.pubts,json._exportedAt);
     return true;
   },
   applyImport(json){
@@ -687,7 +698,7 @@ function switchView(name){
 
 (async function start(){
   Data.load();
-  await Data.seedFromFileIfEmpty();
+  await Data.syncFromPublished();
   Data.load();
 
   RERENDER=renderAll;
@@ -711,7 +722,7 @@ function switchView(name){
   document.getElementById('importBtn').addEventListener('click',()=>impInput.click());
   impInput.addEventListener('change',async()=>{
     const file=impInput.files[0];if(!file)return;
-    try{const json=JSON.parse(await file.text());Data.applyImport(json);renderAll();toast('Planning importé');}
+    try{const json=JSON.parse(await file.text());Data.applyImport(json);if(json._exportedAt)lsSet(STORE.pubts,json._exportedAt);renderAll();toast('Planning importé');}
     catch(e){toast('Fichier illisible');}
     impInput.value='';
   });
