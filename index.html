@@ -114,6 +114,8 @@ body.editing .toggle-edit .dot{background:#8bbf86;}
 .foot-cell.label{text-align:left;padding-left:14px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:.7rem;color:var(--ink-soft);}
 .foot-cell.grand{background:var(--ink);color:var(--panel);font-family:var(--font-display);font-size:1.15rem;}
 body:not(.editing) .role-select,body:not(.editing) .shift input{pointer-events:none;}
+body:not(.editing) .shift.empty{display:none;}
+body:not(.editing) .role-select:not(.has-role){display:none;}
 /* récap fioles */
 .recap{margin-top:30px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px 8px;}
 .recap h2{font-family:var(--font-display);font-weight:600;font-size:1.4rem;margin:0 0 2px;}
@@ -531,8 +533,8 @@ const Planning=(function(){
         const roleStyle=role?`style="background:${role.bg};color:${role.fg};border-color:${role.br}"`:'';
         html+=`<div class="cell day-cell ${i>=5?'is-weekend':''}" data-key="${key}">
           <select class="role-select ${e.role?'has-role':''}" data-f="role" ${roleStyle}>${roleOptions(e.role||'')}</select>
-          <div class="shift"><input type="time" data-f="s1s" value="${e.s1s||''}" aria-label="Début créneau 1"><span class="sep">–</span><input type="time" data-f="s1e" value="${e.s1e||''}" aria-label="Fin créneau 1"></div>
-          <div class="shift"><input type="time" data-f="s2s" value="${e.s2s||''}" aria-label="Début créneau 2"><span class="sep">–</span><input type="time" data-f="s2e" value="${e.s2e||''}" aria-label="Fin créneau 2"></div>
+          <div class="shift ${(e.s1s||e.s1e)?'':'empty'}"><input type="time" data-f="s1s" value="${e.s1s||''}" aria-label="Début créneau 1"><span class="sep">–</span><input type="time" data-f="s1e" value="${e.s1e||''}" aria-label="Fin créneau 1"></div>
+          <div class="shift ${(e.s2s||e.s2e)?'':'empty'}"><input type="time" data-f="s2s" value="${e.s2s||''}" aria-label="Début créneau 2"><span class="sep">–</span><input type="time" data-f="s2e" value="${e.s2e||''}" aria-label="Fin créneau 2"></div>
           <div class="day-total ${dMin?'':'zero'}">${fmtHM(dMin,true)}</div></div>`;
       });
       html+=`<div class="cell tot-cell"><span class="label">heures</span><span class="val">${fmtHM(weekMin)}</span></div>`;
