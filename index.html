@@ -94,6 +94,14 @@ body.editing .toggle-edit .dot{background:#8bbf86;}
 .name-cell .who{font-family:var(--font-display);font-size:1.18rem;color:var(--ink);}
 .name-cell .week-h{font-size:.76rem;color:var(--ink-soft);}
 .name-cell .week-h b{color:var(--ink);font-weight:800;}
+.name-cell .warn{font-size:.72rem;font-weight:800;color:#9a3b3b;margin-top:3px;display:flex;align-items:center;gap:4px;}
+.day-cell.over{box-shadow:inset 0 0 0 2px #d8a0a0;}
+/* compteurs absences */
+.counters{min-width:520px;display:grid;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+.counters .ccell{padding:8px 10px;border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);font-size:.82rem;text-align:center;font-variant-numeric:tabular-nums;}
+.counters .chead{background:var(--vellum-2);font-weight:800;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);}
+.counters .cname{text-align:left;font-family:var(--font-display);font-size:1.05rem;color:var(--ink);background:var(--panel);}
+.counters .czero{color:var(--ink-faint);}
 .day-cell{padding:8px 7px;display:flex;flex-direction:column;gap:6px;min-height:118px;}
 .day-cell.is-weekend{background:rgba(221,211,194,.18);}
 .day-cell.absent{justify-content:center;align-items:center;gap:6px;background:rgba(221,211,194,.30);}
@@ -165,7 +173,14 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
 .add-row input{flex:1;}
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--panel);padding:11px 18px;border-radius:999px;font-size:.85rem;font-weight:700;box-shadow:0 10px 30px rgba(59,50,71,.3);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:50;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-@media (max-width:640px){.brand .name{font-size:1.3rem;}.page-title{font-size:1.55rem;}.period-label{min-width:0;font-size:1.05rem;}.toolbar{gap:8px;}}
+@media (max-width:640px){
+  .brand .name{font-size:1.3rem;}.page-title{font-size:1.55rem;}.period-label{min-width:0;font-size:1.05rem;}.toolbar{gap:8px;}
+  .grid{--col-name:116px;--col-tot:84px;min-width:760px;}
+  .name-cell{position:sticky;left:0;z-index:2;box-shadow:2px 0 6px rgba(59,50,71,.08);}
+  .head-cell.corner{position:sticky;left:0;z-index:3;}
+  .abs-grid .abs-name,.abs-grid .abs-head.corner{position:sticky;left:0;z-index:2;box-shadow:2px 0 6px rgba(59,50,71,.08);}
+  .name-cell .who{font-size:1rem;}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none !important;}}
 @media print{body{background:#fff;}.masthead .nav,.toolbar,.note,.toggle-edit,button{display:none !important;}.scroll-x{overflow:visible;}.grid,.abs-grid{box-shadow:none;min-width:0;}.page{padding:0;}}
 </style>
@@ -222,6 +237,8 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
         <input type="date" id="pl-picker">
       </div>
       <div class="spacer"></div>
+      <button id="pl-copyprev" class="ghost" title="Recopier le planning de la semaine précédente sur cette semaine">↺ Copier la semaine précédente</button>
+      <button id="pl-print" class="ghost" title="Imprimer / PDF">Imprimer</button>
       <div class="group">
         <label for="pl-filter">Afficher</label>
         <select id="pl-filter"></select>
@@ -264,25 +281,32 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
         <input type="number" id="ab-year" min="2020" max="2099" step="1" style="width:90px">
       </div>
       <div class="spacer"></div>
+      <button id="ab-print" class="ghost" title="Imprimer / PDF">Imprimer</button>
       <button id="ab-settings" class="ghost">Équipe &amp; codes</button>
     </div>
     <div class="legend" id="ab-legend" style="margin-bottom:18px"></div>
     <div class="scroll-x"><div class="abs-grid" id="ab-grid"></div></div>
+    <section class="recap" id="ab-counters-wrap" style="margin-top:30px">
+      <h2>Compteurs de l'année — <span id="ab-counterYear"></span></h2>
+      <p class="hint">Total de jours posés par équipier et par code, sur l'année affichée.</p>
+      <div class="scroll-x"><div id="ab-counters"></div></div>
+    </section>
   </section>
 
   <!-- ===================== PUBLICATION (partagé) ===================== -->
   <div class="toolbar" style="margin-top:26px">
     <span style="font-size:.8rem;color:var(--ink-soft);font-weight:700">Publication&nbsp;:</span>
-    <button id="exportBtn" class="primary">Exporter (planning-data.json)</button>
-    <button id="importBtn">Importer un fichier</button>
+    <button id="publishBtn" class="primary" title="Envoie le planning en ligne pour toute l'équipe, en un clic">⬆ Publier en ligne</button>
+    <button id="exportBtn" class="ghost">Exporter le fichier</button>
+    <button id="importBtn" class="ghost">Importer un fichier</button>
     <button id="loadPublishedBtn" class="ghost">Recharger le planning publié</button>
     <input type="file" id="importInput" accept="application/json" hidden>
   </div>
   <div class="note">
-    <b>Comment ça marche.</b> Tes modifications sont enregistrées dans <b>ton</b> navigateur.
-    Pour que toute l'équipe voie le même planning, clique <b>Exporter</b>, puis dépose le
-    fichier <code>planning-data.json</code> à côté de cette page sur GitHub. Les équipiers
-    ouvrent le lien et consultent — l'édition se fait de ton côté.
+    <b>Comment ça marche.</b> « <b>Publier en ligne</b> » envoie ton planning à tout le monde
+    en un clic (à configurer une fois dans <b>Réglages</b> avec ta clé GitHub). Sinon, méthode
+    manuelle : « Exporter le fichier », puis dépose le <code>planning-data.json</code> sur GitHub.
+    Les équipiers ouvrent le lien et voient toujours ta dernière version automatiquement.
   </div>
 </main>
 
@@ -299,7 +323,7 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
    DONNÉES — équipe, postes, codes, stockage, calcul d'heures
    Aucune notion d'argent.
    ============================================================ */
-const STORE={config:'morpheus_config_v1',planning:'morpheus_planning_v1',absences:'morpheus_absences_v1',pubts:'morpheus_pubts_v1'};
+const STORE={config:'morpheus_config_v1',planning:'morpheus_planning_v1',absences:'morpheus_absences_v1',pubts:'morpheus_pubts_v1',ghtoken:'morpheus_ghtoken_v1'};
 const PASTELS=[
   {bg:'#E7DCF1',fg:'#4A3A63',br:'#CDBBE4'},
   {bg:'#DEEBD7',fg:'#3F5436',br:'#BFD6B2'},
@@ -311,6 +335,8 @@ const PASTELS=[
 ];
 const DEFAULT_CONFIG={
   team:'Morpheus Experience',
+  editPin:'',
+  github:{owner:'leconceptarium',repo:'morpheus-planning',branch:'main',path:'planning-data.json'},
   employees:[
     {id:'maxence',name:'Maxence T'},
     {id:'damien',name:'Damien J'},
@@ -354,6 +380,30 @@ const Data={
       if(!this.config.roles.some(r=>r.name==='Formation')){this.config.roles.push({name:'Formation',...PASTELS[5]});this.saveConfig();}
       if(!this.config.roles.some(r=>r.name==='Créa-maintenance')){this.config.roles.push({name:'Créa-maintenance',...PASTELS[6]});this.saveConfig();}
     }
+    if(this.config&&!this.config.github){this.config.github={owner:'leconceptarium',repo:'morpheus-planning',branch:'main',path:'planning-data.json'};this.saveConfig();}
+    if(this.config&&typeof this.config.editPin!=='string'){this.config.editPin='';this.saveConfig();}
+  },
+  ghToken(){return lsGet(STORE.ghtoken,'')||'';},
+  setGhToken(t){lsSet(STORE.ghtoken,t||'');},
+  async publishToGitHub(){
+    const g=this.config.github||{};const token=this.ghToken();
+    if(!g.owner||!g.repo){throw new Error('Configure d\'abord le dépôt GitHub dans les Réglages.');}
+    if(!token){throw new Error('Ajoute ta clé GitHub dans les Réglages.');}
+    const path=g.path||'planning-data.json';const branch=g.branch||'main';
+    const api=`https://api.github.com/repos/${g.owner}/${g.repo}/contents/${path}`;
+    const headers={'Authorization':`Bearer ${token}`,'Accept':'application/vnd.github+json'};
+    // récupère le sha existant si le fichier est déjà là
+    let sha=undefined;
+    try{const r=await fetch(`${api}?ref=${encodeURIComponent(branch)}`,{headers});if(r.ok){const j=await r.json();sha=j.sha;}}catch(e){}
+    const bundle=this.exportBundle();
+    const content=JSON.stringify(bundle,null,2);
+    const b64=btoa(unescape(encodeURIComponent(content)));
+    const body={message:`Planning mis à jour ${new Date().toLocaleString('fr-FR')}`,content:b64,branch};
+    if(sha)body.sha=sha;
+    const res=await fetch(api,{method:'PUT',headers,body:JSON.stringify(body)});
+    if(!res.ok){let m='Échec de la publication';try{const j=await res.json();if(j.message)m+=' : '+j.message;}catch(e){}throw new Error(m);}
+    if(bundle._exportedAt)lsSet(STORE.pubts,bundle._exportedAt);
+    return true;
   },
   saveConfig(){lsSet(STORE.config,this.config);},
   savePlanning(){lsSet(STORE.planning,this.planning);},
@@ -422,6 +472,20 @@ function totalMinutesForRange(empId,fromDate,toDate){let total=0;let d=new Date(
    COQUILLE — notifications, édition, réglages
    ============================================================ */
 let RERENDER=()=>{};
+let editUnlocked=false;
+function tryToggleEdit(){
+  const turningOn=!document.body.classList.contains('editing');
+  if(turningOn){
+    const pin=(Data.config.editPin||'').trim();
+    if(pin&&!editUnlocked){
+      const entered=window.prompt('Code éditeur :');
+      if(entered===null)return;
+      if(entered.trim()!==pin){toast('Code incorrect');return;}
+      editUnlocked=true;
+    }
+  }
+  setEditing(turningOn);
+}
 function toast(msg){
   let t=document.querySelector('.toast');
   if(!t){t=document.createElement('div');t.className='toast';document.body.appendChild(t);}
@@ -457,13 +521,23 @@ function buildSettings(dlg){
       <input type="text" value="${escapeHtml(x.label)}" data-field="clabel" aria-label="Libellé">
       <button class="ghost icon" data-del-code="${i}" title="Retirer">✕</button>
     </div>`).join('');
+  const g=c.github||{};
   body.innerHTML=`
     <h4>Équipe</h4><div id="empList">${empRows}</div>
     <div class="add-row"><input type="text" id="newEmp" placeholder="Nom du nouvel équipier…"><button id="addEmp">Ajouter</button></div>
     <h4>Postes</h4><div id="roleList">${roleRows}</div>
     <div class="add-row"><input type="text" id="newRole" placeholder="Nouveau poste…"><button id="addRole">Ajouter</button></div>
     <h4>Codes d'absence</h4><div id="codeList">${codeRows}</div>
-    <div class="add-row"><input type="text" id="newCode" placeholder="Code" style="max-width:80px"><input type="text" id="newCodeLabel" placeholder="Libellé…"><button id="addCode">Ajouter</button></div>`;
+    <div class="add-row"><input type="text" id="newCode" placeholder="Code" style="max-width:80px"><input type="text" id="newCodeLabel" placeholder="Libellé…"><button id="addCode">Ajouter</button></div>
+    <h4>Verrou éditeur (code)</h4>
+    <div class="row-item"><input type="text" id="editPin" value="${escapeHtml(c.editPin||'')}" placeholder="Aucun code (édition libre)" aria-label="Code éditeur"></div>
+    <p class="hint" style="margin:2px 0 0">Si un code est défini, il sera demandé pour passer en Édition. Laisse vide pour ne pas verrouiller. (Simple garde-fou contre les modifs accidentelles, pas un mot de passe sécurisé.)</p>
+    <h4>Publication automatique (GitHub)</h4>
+    <div class="row-item"><input type="text" id="ghOwner" value="${escapeHtml(g.owner||'')}" placeholder="Compte GitHub (ex. leconceptarium)"></div>
+    <div class="row-item"><input type="text" id="ghRepo" value="${escapeHtml(g.repo||'')}" placeholder="Dépôt (ex. morpheus-planning)"></div>
+    <div class="row-item"><input type="text" id="ghBranch" value="${escapeHtml(g.branch||'main')}" placeholder="Branche (main)" style="max-width:120px"><input type="text" id="ghPath" value="${escapeHtml(g.path||'planning-data.json')}" placeholder="planning-data.json"></div>
+    <div class="row-item"><input type="password" id="ghToken" value="${escapeHtml(Data.ghToken())}" placeholder="Clé d'accès GitHub (token)" autocomplete="off"></div>
+    <p class="hint" style="margin:2px 0 0">La clé reste sur <b>cet appareil</b> uniquement (jamais publiée). Génère-la sur GitHub → Settings → Developer settings → Personal access tokens, avec le droit « Contents : write » sur ce dépôt.</p>`;
   const save=()=>{Data.saveConfig();RERENDER();};
   body.querySelectorAll('[data-emp] input').forEach(inp=>inp.addEventListener('change',e=>{
     const i=+e.target.closest('[data-emp]').dataset.emp;
@@ -485,6 +559,15 @@ function buildSettings(dlg){
   body.querySelector('#addCode').addEventListener('click',()=>{const code=body.querySelector('#newCode').value.trim().toUpperCase();
     const label=body.querySelector('#newCodeLabel').value.trim();if(!code)return;
     c.codes.push({code,label:label||code,...Data.nextPastel(c.codes.length)});save();buildSettings(dlg);});
+  body.querySelector('#editPin').addEventListener('change',e=>{c.editPin=e.target.value.trim();editUnlocked=true;save();});
+  const gw=()=>{c.github=c.github||{};
+    c.github.owner=body.querySelector('#ghOwner').value.trim();
+    c.github.repo=body.querySelector('#ghRepo').value.trim();
+    c.github.branch=body.querySelector('#ghBranch').value.trim()||'main';
+    c.github.path=body.querySelector('#ghPath').value.trim()||'planning-data.json';
+    Data.saveConfig();};
+  ['#ghOwner','#ghRepo','#ghBranch','#ghPath'].forEach(sel=>body.querySelector(sel).addEventListener('change',gw));
+  body.querySelector('#ghToken').addEventListener('change',e=>Data.setGhToken(e.target.value.trim()));
 }
 
 /* ============================================================
@@ -533,8 +616,9 @@ const Planning=(function(){
       Data.config.roles.map(r=>`<option value="${escapeHtml(r.name)}" ${r.name===name?'selected':''}>${escapeHtml(r.name)}</option>`).join('');
     employees.forEach(emp=>{
       const weekMin=totalMinutesForRange(emp.id,weekStart,addDays(weekStart,6));
+      const weekWarn=weekMin>48*60?`<span class="warn">⚠ semaine &gt; 48 h</span>`:'';
       html+=`<div class="cell name-cell"><span class="who">${escapeHtml(emp.name)}</span>
-        <span class="week-h">Semaine : <b>${fmtHM(weekMin)}</b></span></div>`;
+        <span class="week-h">Semaine : <b>${fmtHM(weekMin)}</b></span>${weekWarn}</div>`;
       days.forEach((d,i)=>{
         const key=`${emp.id}|${isoDate(d)}`;const e=Data.planning[key]||{};
         const absCode=Data.absences[key]||'';
@@ -548,8 +632,9 @@ const Planning=(function(){
         }
         const dMin=dayMinutes(e);const brk=breakMinutesFor(dMin);const counted=dMin+brk;const role=Data.roleByName(e.role);
         const roleStyle=role?`style="background:${role.bg};color:${role.fg};border-color:${role.br}"`:'';
-        html+=`<div class="cell day-cell ${i>=5?'is-weekend':''}" data-key="${key}">
-          <select class="role-select ${e.role?'has-role':''}" data-f="role" ${roleStyle}>${roleOptions(e.role||'')}</select>
+        const over=dMin>10*60?'over':'';
+        html+=`<div class="cell day-cell ${over} ${i>=5?'is-weekend':''}" data-key="${key}" title="${over?'Journée de plus de 10 h de travail effectif':''}">`+
+          `<select class="role-select ${e.role?'has-role':''}" data-f="role" ${roleStyle}>${roleOptions(e.role||'')}</select>
           <div class="shift ${(e.s1s||e.s1e)?'':'empty'}"><input type="time" data-f="s1s" value="${e.s1s||''}" aria-label="Début créneau 1"><span class="sep">–</span><input type="time" data-f="s1e" value="${e.s1e||''}" aria-label="Fin créneau 1"></div>
           <div class="shift ${(e.s2s||e.s2e)?'':'empty'}"><input type="time" data-f="s2s" value="${e.s2s||''}" aria-label="Début créneau 2"><span class="sep">–</span><input type="time" data-f="s2e" value="${e.s2e||''}" aria-label="Fin créneau 2"></div>
           ${brk?`<div class="break-tag">+${brk} min pause</div>`:''}
@@ -602,12 +687,29 @@ const Planning=(function(){
       <ellipse cx="22" cy="${y+2}" rx="11" ry="2.2" fill="#E7DCF1" clip-path="url(#${id})"/></svg>`;
   }
 
+  function copyPrevWeek(){
+    if(!document.body.classList.contains('editing')){toast('Passe d\'abord en Édition (✎)');return;}
+    if(!window.confirm('Recopier le planning de la semaine précédente sur cette semaine ? Les créneaux actuels de cette semaine seront remplacés.'))return;
+    let n=0;
+    Data.config.employees.forEach(emp=>{
+      for(let i=0;i<7;i++){
+        const dest=`${emp.id}|${isoDate(addDays(weekStart,i))}`;
+        const src=`${emp.id}|${isoDate(addDays(weekStart,i-7))}`;
+        if(Data.planning[src]){Data.planning[dest]=deepClone(Data.planning[src]);n++;}
+        else{delete Data.planning[dest];}
+      }
+    });
+    Data.savePlanning();render();toast(n?`Semaine recopiée (${n} journées)`:'Rien à recopier sur la semaine précédente');
+  }
+
   function wire(){
     document.getElementById('pl-prev').addEventListener('click',()=>{weekStart=addDays(weekStart,-7);render();});
     document.getElementById('pl-next').addEventListener('click',()=>{weekStart=addDays(weekStart,7);render();});
     document.getElementById('pl-today').addEventListener('click',()=>{weekStart=mondayOf(new Date());render();});
     document.getElementById('pl-picker').addEventListener('change',e=>{if(e.target.value){weekStart=mondayOf(parseISO(e.target.value));render();}});
     document.getElementById('pl-filter').addEventListener('change',e=>{filterEmp=e.target.value;render();});
+    document.getElementById('pl-copyprev').addEventListener('click',copyPrevWeek);
+    document.getElementById('pl-print').addEventListener('click',()=>window.print());
   }
 
   return {render,wire};
@@ -620,7 +722,7 @@ const Absences=(function(){
   let viewYear=new Date().getFullYear();
   let viewMonth=new Date().getMonth();
 
-  function render(){renderToolbar();renderLegend();renderAbsGrid();setEditing(document.body.classList.contains('editing'));}
+  function render(){renderToolbar();renderLegend();renderAbsGrid();renderCounters();setEditing(document.body.classList.contains('editing'));}
 
   function renderToolbar(){
     const label=document.getElementById('ab-period');
@@ -669,9 +771,40 @@ const Absences=(function(){
       sel.addEventListener('change',()=>{
         const key=sel.dataset.key;
         if(sel.value)Data.absences[key]=sel.value;else delete Data.absences[key];
-        Data.saveAbsences();renderAbsGrid();setEditing(true);
+        Data.saveAbsences();renderAbsGrid();renderCounters();setEditing(true);
       });
     });
+  }
+
+  function renderCounters(){
+    const head=document.getElementById('ab-counterYear');
+    const wrap=document.getElementById('ab-counters');
+    if(!wrap)return;
+    if(head)head.textContent=viewYear;
+    const codes=Data.config.codes;
+    const prefixYear=String(viewYear)+'-';
+    // total par employé et par code sur l'année affichée
+    const totals={}; // empId -> {code -> n, _all}
+    Data.config.employees.forEach(e=>{totals[e.id]={_all:0};codes.forEach(c=>totals[e.id][c.code]=0);});
+    Object.keys(Data.absences).forEach(key=>{
+      const sep=key.indexOf('|');if(sep<0)return;
+      const empId=key.slice(0,sep);const iso=key.slice(sep+1);
+      if(!iso.startsWith(prefixYear))return;
+      const code=Data.absences[key];
+      if(totals[empId]&&code in totals[empId]){totals[empId][code]++;totals[empId]._all++;}
+    });
+    wrap.className='counters';
+    wrap.style.gridTemplateColumns=`160px repeat(${codes.length},minmax(56px,1fr)) 70px`;
+    let html='';
+    html+=`<div class="ccell chead cname">Équipier</div>`;
+    codes.forEach(c=>html+=`<div class="ccell chead" title="${escapeHtml(c.label)}">${escapeHtml(c.code)}</div>`);
+    html+=`<div class="ccell chead">Total</div>`;
+    Data.config.employees.forEach(e=>{
+      html+=`<div class="ccell cname">${escapeHtml(e.name)}</div>`;
+      codes.forEach(c=>{const n=totals[e.id][c.code];html+=`<div class="ccell ${n?'':'czero'}">${n||'·'}</div>`;});
+      html+=`<div class="ccell ${totals[e.id]._all?'':'czero'}"><b>${totals[e.id]._all||'·'}</b></div>`;
+    });
+    wrap.innerHTML=html;
   }
 
   function wire(){
@@ -679,6 +812,7 @@ const Absences=(function(){
     document.getElementById('ab-next').addEventListener('click',()=>{viewMonth++;if(viewMonth>11){viewMonth=0;viewYear++;}render();});
     document.getElementById('ab-today').addEventListener('click',()=>{viewYear=new Date().getFullYear();viewMonth=new Date().getMonth();render();});
     document.getElementById('ab-year').addEventListener('change',e=>{const v=parseInt(e.target.value,10);if(!isNaN(v)){viewYear=v;render();}});
+    document.getElementById('ab-print').addEventListener('click',()=>window.print());
   }
 
   return {render,wire};
@@ -708,7 +842,16 @@ function switchView(name){
 
   // bascule édition (les deux boutons ✎)
   document.querySelectorAll('#editToggle,#editToggle2').forEach(btn=>
-    btn.addEventListener('click',()=>setEditing(!document.body.classList.contains('editing'))));
+    btn.addEventListener('click',tryToggleEdit));
+
+  // publication en un clic vers GitHub
+  document.getElementById('publishBtn').addEventListener('click',async()=>{
+    const btn=document.getElementById('publishBtn');const old=btn.textContent;
+    btn.disabled=true;btn.textContent='Publication…';
+    try{await Data.publishToGitHub();toast('Planning publié en ligne ✓');}
+    catch(e){toast(e.message||'Échec de la publication');}
+    finally{btn.disabled=false;btn.textContent=old;}
+  });
 
   // export
   document.getElementById('exportBtn').addEventListener('click',()=>{
