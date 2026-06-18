@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Morpheus Experience — Officine du temps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Morpheus Experience — Officine du temps
+   Ambiance : apothicaire onirique. Palette pastel, sobre.
+   ============================================================ */
+:root{
+  --vellum:#F4EFE4; --vellum-2:#EFE8D8; --panel:#FBF8F1;
+  --ink:#3B3247; --ink-soft:#756B82; --ink-faint:#A79FB0;
+  --line:#DDD3C2; --line-soft:#E8E0D0; --gilt:#B08D57; --gilt-soft:#C9AE7E;
+  --radius:10px; --shadow:0 1px 2px rgba(59,50,71,.05),0 8px 24px rgba(59,50,71,.06);
+  --font-display:'Cormorant Garamond','Iowan Old Style',Georgia,serif;
+  --font-body:'Mulish',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0; font-family:var(--font-body); color:var(--ink);
+  background-color:var(--vellum);
+  background-image:
+    radial-gradient(circle at 18% 12%,rgba(176,141,87,.05),transparent 40%),
+    radial-gradient(circle at 85% 78%,rgba(124,108,150,.05),transparent 42%);
+  line-height:1.5; font-size:15px;
+}
+/* masthead */
+.masthead{border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);}
+.masthead-inner{max-width:1180px;margin:0 auto;padding:20px 24px 14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.crest{width:42px;height:42px;flex:0 0 42px;color:var(--gilt);}
+.brand{display:flex;flex-direction:column;line-height:1.1;}
+.brand .name{font-family:var(--font-display);font-weight:600;font-size:1.55rem;letter-spacing:.01em;color:var(--ink);}
+.brand .tagline{font-size:.72rem;text-transform:uppercase;letter-spacing:.28em;color:var(--gilt);margin-top:2px;}
+.nav{margin-left:auto;display:flex;gap:6px;}
+.nav button{
+  font-family:var(--font-body);color:var(--ink-soft);font-weight:700;font-size:.82rem;
+  letter-spacing:.04em;padding:8px 16px;border-radius:999px;border:1px solid transparent;
+  background:transparent;cursor:pointer;transition:background .15s,color .15s,border-color .15s;
+}
+.nav button:hover{color:var(--ink);background:var(--vellum-2);}
+.nav button.active{color:var(--ink);background:var(--panel);border-color:var(--line);box-shadow:var(--shadow);}
+/* page */
+.page{max-width:1180px;margin:0 auto;padding:22px 24px 80px;}
+.view{display:none;}
+.view.active{display:block;}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px;}
+.page-title{font-family:var(--font-display);font-weight:600;font-size:2rem;margin:0;color:var(--ink);}
+.page-sub{color:var(--ink-soft);margin:2px 0 0;font-size:.92rem;}
+.rule{display:flex;align-items:center;gap:12px;color:var(--gilt-soft);margin:14px 0 22px;}
+.rule::before,.rule::after{content:'';height:1px;flex:1;background:linear-gradient(90deg,transparent,var(--line),transparent);}
+.rule svg{width:16px;height:16px;}
+/* toolbar */
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow);margin-bottom:22px;}
+.toolbar .spacer{flex:1;}
+.toolbar .group{display:flex;align-items:center;gap:8px;}
+.toolbar label{font-size:.78rem;color:var(--ink-soft);font-weight:700;letter-spacing:.03em;}
+.period-label{font-family:var(--font-display);font-size:1.25rem;color:var(--ink);min-width:230px;text-align:center;}
+/* boutons & champs */
+button,.btn{font-family:var(--font-body);font-size:.82rem;font-weight:700;letter-spacing:.02em;color:var(--ink);background:var(--vellum-2);border:1px solid var(--line);border-radius:8px;padding:8px 13px;cursor:pointer;transition:background .15s,border-color .15s,transform .05s;}
+button:hover,.btn:hover{background:#fff;border-color:var(--gilt-soft);}
+button:active{transform:translateY(1px);}
+button.icon{padding:8px 11px;font-size:1rem;line-height:1;}
+button.primary{background:var(--ink);color:var(--panel);border-color:var(--ink);}
+button.primary:hover{background:#4b4159;}
+button.ghost{background:transparent;border-color:transparent;color:var(--ink-soft);}
+button.ghost:hover{background:var(--vellum-2);color:var(--ink);}
+button:disabled{opacity:.5;cursor:not-allowed;}
+select,input[type="time"],input[type="date"],input[type="text"],input[type="number"]{font-family:var(--font-body);font-size:.85rem;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:6px 8px;}
+select:focus,input:focus{outline:2px solid var(--gilt-soft);outline-offset:1px;}
+.toggle-edit{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:5px 6px 5px 12px;background:var(--panel);}
+.toggle-edit .dot{width:9px;height:9px;border-radius:50%;background:var(--ink-faint);}
+body.editing .toggle-edit .dot{background:#8bbf86;}
+.toggle-edit .state{font-size:.78rem;font-weight:700;color:var(--ink-soft);}
+/* grille planning */
+.scroll-x{overflow-x:auto;border-radius:var(--radius);}
+.grid{--col-name:168px;--col-tot:116px;min-width:920px;display:grid;grid-template-columns:var(--col-name) repeat(7,minmax(108px,1fr)) var(--col-tot);background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.cell{border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);}
+.grid .cell:nth-child(9n){border-right:none;}
+.head-cell{padding:10px 8px;background:var(--vellum-2);border-bottom:1px solid var(--line);text-align:center;}
+.head-cell .dname{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);font-weight:700;}
+.head-cell .dnum{font-family:var(--font-display);font-size:1.15rem;color:var(--ink);}
+.head-cell.corner{text-align:left;padding-left:14px;}
+.head-cell.corner span{font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gilt);font-weight:700;}
+.head-cell.is-weekend{background:#ECE7DA;}
+.head-cell.is-today .dnum{color:var(--gilt);}
+.head-cell.is-today{box-shadow:inset 0 -3px 0 var(--gilt-soft);}
+.name-cell{padding:12px 14px;display:flex;flex-direction:column;gap:2px;justify-content:center;background:var(--panel);}
+.name-cell .who{font-family:var(--font-display);font-size:1.18rem;color:var(--ink);}
+.name-cell .week-h{font-size:.76rem;color:var(--ink-soft);}
+.name-cell .week-h b{color:var(--ink);font-weight:800;}
+.day-cell{padding:8px 7px;display:flex;flex-direction:column;gap:6px;min-height:118px;}
+.day-cell.is-weekend{background:rgba(221,211,194,.18);}
+.role-select{width:100%;font-size:.78rem;padding:5px 6px;}
+.role-select.has-role{font-weight:700;}
+.shift{display:flex;align-items:center;gap:3px;}
+.shift input[type="time"]{flex:1;min-width:0;padding:4px 4px;font-size:.76rem;text-align:center;}
+.shift .sep{color:var(--ink-faint);font-size:.8rem;}
+.day-total{margin-top:auto;text-align:right;font-size:.78rem;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
+.day-total.zero{color:var(--ink-faint);font-weight:600;}
+.tot-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 8px;background:var(--vellum-2);}
+.tot-cell .label{font-size:.64rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);}
+.tot-cell .val{font-family:var(--font-display);font-size:1.4rem;color:var(--ink);font-variant-numeric:tabular-nums;}
+.foot-cell{padding:10px 8px;text-align:center;background:#ECE7DA;border-top:1px solid var(--line);font-weight:800;font-size:.82rem;color:var(--ink);font-variant-numeric:tabular-nums;}
+.foot-cell.label{text-align:left;padding-left:14px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:.7rem;color:var(--ink-soft);}
+.foot-cell.grand{background:var(--ink);color:var(--panel);font-family:var(--font-display);font-size:1.15rem;}
+body:not(.editing) .role-select,body:not(.editing) .shift input{pointer-events:none;}
+/* récap fioles */
+.recap{margin-top:30px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px 8px;}
+.recap h2{font-family:var(--font-display);font-weight:600;font-size:1.4rem;margin:0 0 2px;}
+.recap .hint{color:var(--ink-soft);font-size:.85rem;margin:0 0 16px;}
+.vials{display:flex;gap:22px;flex-wrap:wrap;padding-bottom:14px;}
+.vial{display:flex;flex-direction:column;align-items:center;width:92px;}
+.vial .who{font-size:.82rem;font-weight:700;margin-top:8px;text-align:center;color:var(--ink);}
+.vial .h{font-family:var(--font-display);font-size:1.05rem;color:var(--ink-soft);}
+/* légende */
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 0;}
+.chip{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:700;padding:4px 11px;border-radius:999px;border:1px solid;}
+.chip .code{font-weight:800;letter-spacing:.03em;}
+.chip .desc{font-weight:600;color:var(--ink-soft);}
+/* grille absences */
+.abs-grid{min-width:880px;display:grid;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.abs-grid .acell{border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);}
+.abs-head{background:var(--vellum-2);border-bottom:1px solid var(--line);text-align:center;padding:8px 2px;font-size:.72rem;color:var(--ink-soft);font-weight:700;}
+.abs-head.dow{font-size:.58rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.04em;}
+.abs-head.is-weekend{background:#ECE7DA;}
+.abs-head.corner{text-align:left;padding-left:14px;background:var(--vellum-2);}
+.abs-head.tot{background:#ECE7DA;}
+.abs-name{display:flex;align-items:center;padding:0 14px;font-family:var(--font-display);font-size:1.12rem;color:var(--ink);background:var(--panel);}
+.abs-cell{position:relative;min-height:38px;padding:0;display:flex;align-items:stretch;}
+.abs-cell.is-weekend{background:rgba(221,211,194,.22);}
+.abs-cell select{width:100%;border:none;background:transparent;border-radius:0;text-align:center;text-align-last:center;font-size:.74rem;font-weight:800;color:var(--ink);padding:0 2px;cursor:pointer;appearance:none;-webkit-appearance:none;}
+.abs-cell select:focus{outline:2px solid var(--gilt-soft);outline-offset:-2px;}
+.abs-tot{display:flex;align-items:center;justify-content:center;background:var(--vellum-2);font-weight:800;font-size:.9rem;color:var(--ink);font-variant-numeric:tabular-nums;}
+.abs-tot.zero{color:var(--ink-faint);font-weight:600;}
+body:not(.editing) .abs-cell select{pointer-events:none;}
+/* note */
+.note{background:var(--panel);border:1px dashed var(--line);border-radius:var(--radius);padding:14px 18px;margin-top:26px;color:var(--ink-soft);font-size:.86rem;}
+.note b{color:var(--ink);}
+/* réglages */
+dialog.sheet{border:1px solid var(--line);border-radius:14px;padding:0;max-width:520px;width:calc(100% - 32px);background:var(--vellum);color:var(--ink);box-shadow:0 20px 60px rgba(59,50,71,.28);}
+dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line);}
+.sheet-head h3{font-family:var(--font-display);font-weight:600;font-size:1.4rem;margin:0;}
+.sheet-body{padding:18px 20px;max-height:70vh;overflow:auto;}
+.sheet-body h4{font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--gilt);margin:18px 0 8px;}
+.sheet-body h4:first-child{margin-top:0;}
+.row-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.row-item input[type="text"]{flex:1;}
+.row-item .swatch{width:18px;height:18px;border-radius:5px;border:1px solid var(--line);flex:0 0 18px;}
+.add-row{display:flex;gap:8px;margin-top:10px;}
+.add-row input{flex:1;}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--panel);padding:11px 18px;border-radius:999px;font-size:.85rem;font-weight:700;box-shadow:0 10px 30px rgba(59,50,71,.3);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:50;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+@media (max-width:640px){.brand .name{font-size:1.3rem;}.page-title{font-size:1.55rem;}.period-label{min-width:0;font-size:1.05rem;}.toolbar{gap:8px;}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+@media print{body{background:#fff;}.masthead .nav,.toolbar,.note,.toggle-edit,button{display:none !important;}.scroll-x{overflow:visible;}.grid,.abs-grid{box-shadow:none;min-width:0;}.page{padding:0;}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <svg class="crest" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <circle cx="24" cy="24" r="22" stroke="currentColor" stroke-width="1.2" opacity=".5"/>
+      <path d="M30 14a12 12 0 1 0 0 20 9 9 0 0 1 0-20z" fill="currentColor" opacity=".85"/>
+      <circle cx="33" cy="17" r="1.4" fill="currentColor"/>
+      <circle cx="36" cy="24" r="1" fill="currentColor"/>
+      <circle cx="32" cy="30" r="1.1" fill="currentColor"/>
+    </svg>
+    <div class="brand">
+      <span class="name">Morpheus Experience</span>
+      <span class="tagline">Officine du temps</span>
+    </div>
+    <nav class="nav">
+      <button data-view="planning" class="active">Planning</button>
+      <button data-view="absences">Absences</button>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- ===================== VUE PLANNING ===================== -->
+  <section class="view active" id="view-planning">
+    <div class="page-head">
+      <div>
+        <h1 class="page-title">Planning de travail</h1>
+        <p class="page-sub">Les heures se calculent toutes seules. Choisis le poste de la journée, renseigne les créneaux.</p>
+      </div>
+      <div class="toggle-edit" title="Passer en édition pour modifier">
+        <button id="editToggle" class="ghost icon" aria-label="Basculer édition">✎</button>
+        <span class="dot"></span>
+        <span class="state" id="editState">Consultation</span>
+      </div>
+    </div>
+    <div class="rule">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 12h7l2-4 2 8 2-4h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="toolbar">
+      <div class="group">
+        <button id="pl-prev" class="icon" aria-label="Semaine précédente">‹</button>
+        <span class="period-label" id="pl-period"></span>
+        <button id="pl-next" class="icon" aria-label="Semaine suivante">›</button>
+      </div>
+      <button id="pl-today" class="ghost">Cette semaine</button>
+      <div class="group">
+        <label for="pl-picker">Aller au</label>
+        <input type="date" id="pl-picker">
+      </div>
+      <div class="spacer"></div>
+      <div class="group">
+        <label for="pl-filter">Afficher</label>
+        <select id="pl-filter"></select>
+      </div>
+      <button id="pl-settings" class="ghost">Équipe &amp; postes</button>
+    </div>
+    <div class="scroll-x"><div class="grid" id="pl-grid"></div></div>
+    <section class="recap">
+      <h2>Récapitulatif du mois — <span id="pl-recapMonth"></span></h2>
+      <p class="hint">Total d'heures cumulées sur le mois. Le niveau de chaque fiole est relatif à l'équipier le plus présent.</p>
+      <div class="vials" id="pl-recapVials"></div>
+    </section>
+  </section>
+
+  <!-- ===================== VUE ABSENCES ===================== -->
+  <section class="view" id="view-absences">
+    <div class="page-head">
+      <div>
+        <h1 class="page-title">Registre des absences</h1>
+        <p class="page-sub">Congés, repos et maladies, mois par mois. Choisis un code dans chaque case.</p>
+      </div>
+      <div class="toggle-edit" title="Passer en édition pour modifier">
+        <button id="editToggle2" class="ghost icon" aria-label="Basculer édition">✎</button>
+        <span class="dot"></span>
+        <span class="state" id="editState2">Consultation</span>
+      </div>
+    </div>
+    <div class="rule">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l3 3M18 18l-3-3M18 6l-3 3M6 18l3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    </div>
+    <div class="toolbar">
+      <div class="group">
+        <button id="ab-prev" class="icon" aria-label="Mois précédent">‹</button>
+        <span class="period-label" id="ab-period"></span>
+        <button id="ab-next" class="icon" aria-label="Mois suivant">›</button>
+      </div>
+      <button id="ab-today" class="ghost">Ce mois-ci</button>
+      <div class="group">
+        <label for="ab-year">Année</label>
+        <input type="number" id="ab-year" min="2020" max="2099" step="1" style="width:90px">
+      </div>
+      <div class="spacer"></div>
+      <button id="ab-settings" class="ghost">Équipe &amp; codes</button>
+    </div>
+    <div class="legend" id="ab-legend" style="margin-bottom:18px"></div>
+    <div class="scroll-x"><div class="abs-grid" id="ab-grid"></div></div>
+  </section>
+
+  <!-- ===================== PUBLICATION (partagé) ===================== -->
+  <div class="toolbar" style="margin-top:26px">
+    <span style="font-size:.8rem;color:var(--ink-soft);font-weight:700">Publication&nbsp;:</span>
+    <button id="exportBtn" class="primary">Exporter (planning-data.json)</button>
+    <button id="importBtn">Importer un fichier</button>
+    <button id="loadPublishedBtn" class="ghost">Recharger le planning publié</button>
+    <input type="file" id="importInput" accept="application/json" hidden>
+  </div>
+  <div class="note">
+    <b>Comment ça marche.</b> Tes modifications sont enregistrées dans <b>ton</b> navigateur.
+    Pour que toute l'équipe voie le même planning, clique <b>Exporter</b>, puis dépose le
+    fichier <code>planning-data.json</code> à côté de cette page sur GitHub. Les équipiers
+    ouvrent le lien et consultent — l'édition se fait de ton côté.
+  </div>
+</main>
+
+<dialog class="sheet" id="settingsDialog">
+  <div class="sheet-head">
+    <h3>Équipe, postes &amp; codes</h3>
+    <button class="ghost icon sheet-close" aria-label="Fermer">✕</button>
+  </div>
+  <div class="sheet-body"></div>
+</dialog>
+
+<script>
+/* ============================================================
+   DONNÉES — équipe, postes, codes, stockage, calcul d'heures
+   Aucune notion d'argent.
+   ============================================================ */
+const STORE={config:'morpheus_config_v1',planning:'morpheus_planning_v1',absences:'morpheus_absences_v1'};
+const PASTELS=[
+  {bg:'#E7DCF1',fg:'#4A3A63',br:'#CDBBE4'},
+  {bg:'#DEEBD7',fg:'#3F5436',br:'#BFD6B2'},
+  {bg:'#F4E3BE',fg:'#6B5320',br:'#E4CD93'},
+  {bg:'#D6E9E6',fg:'#2F5450',br:'#AFD4CE'},
+  {bg:'#EBD9DA',fg:'#6A4044',br:'#DBBCC0'},
+  {bg:'#DCE2EC',fg:'#3A4658',br:'#C0CAD9'},
+  {bg:'#EFE0D2',fg:'#6A4B33',br:'#E0C7AE'},
+];
+const DEFAULT_CONFIG={
+  team:'Morpheus Experience',
+  employees:[
+    {id:'maxence',name:'Maxence T'},
+    {id:'damien',name:'Damien J'},
+    {id:'yousra',name:'Yousra'},
+    {id:'johan',name:'Johan'},
+  ],
+  roles:[
+    {name:'Game master',...PASTELS[0]},
+    {name:'Soutien',...PASTELS[1]},
+    {name:'Bar',...PASTELS[2]},
+    {name:'Bar/Escape',...PASTELS[3]},
+    {name:'Repos',...PASTELS[4]},
+  ],
+  codes:[
+    {code:'CP',label:'Congé payé',...PASTELS[1]},
+    {code:'RTT',label:'RTT',...PASTELS[0]},
+    {code:'M',label:'Maladie ou maternité',...PASTELS[4]},
+    {code:'RH',label:'Repos hebdomadaire',...PASTELS[5]},
+    {code:'RC',label:'Repos compensateur',...PASTELS[3]},
+    {code:'CEF',label:'Congé pour événement familial',...PASTELS[2]},
+    {code:'VOLO',label:'Absent',...PASTELS[6]},
+  ],
+};
+function lsGet(k,f){try{const r=localStorage.getItem(k);return r?JSON.parse(r):f;}catch(e){return f;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function lsHas(k){try{return localStorage.getItem(k)!==null;}catch(e){return false;}}
+function deepClone(o){return JSON.parse(JSON.stringify(o));}
+
+const Data={
+  config:null,planning:null,absences:null,
+  load(){
+    this.config=lsGet(STORE.config,null)||deepClone(DEFAULT_CONFIG);
+    this.planning=lsGet(STORE.planning,null)||{};
+    this.absences=lsGet(STORE.absences,null)||{};
+  },
+  saveConfig(){lsSet(STORE.config,this.config);},
+  savePlanning(){lsSet(STORE.planning,this.planning);},
+  saveAbsences(){lsSet(STORE.absences,this.absences);},
+  async seedFromFileIfEmpty(){
+    const empty=!lsHas(STORE.planning)&&!lsHas(STORE.absences)&&!lsHas(STORE.config);
+    if(!empty)return;
+    try{
+      const res=await fetch('./planning-data.json',{cache:'no-store'});
+      if(!res.ok)return;
+      const json=await res.json();
+      this.applyImport(json,{silent:true});
+    }catch(e){}
+  },
+  async loadPublished(){
+    const res=await fetch('./planning-data.json',{cache:'no-store'});
+    if(!res.ok)throw new Error('Aucun planning publié trouvé.');
+    const json=await res.json();
+    this.applyImport(json);
+    return true;
+  },
+  applyImport(json){
+    if(json.config){this.config=json.config;}
+    if(json.planning){this.planning=json.planning;}
+    if(json.absences){this.absences=json.absences;}
+    this.saveConfig();this.savePlanning();this.saveAbsences();
+  },
+  exportBundle(){
+    return {_format:'morpheus-planning',_exportedAt:new Date().toISOString(),
+      config:this.config,planning:this.planning,absences:this.absences};
+  },
+  roleByName(n){return this.config.roles.find(r=>r.name===n)||null;},
+  codeByCode(c){return this.config.codes.find(x=>x.code===c)||null;},
+  nextPastel(u){return PASTELS[u%PASTELS.length];},
+};
+
+const FR_DAYS=['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'];
+const FR_MONTHS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+function isoDate(d){const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`;}
+function parseISO(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
+function mondayOf(date){const d=new Date(date);const wd=(d.getDay()+6)%7;d.setDate(d.getDate()-wd);d.setHours(0,0,0,0);return d;}
+function addDays(date,n){const d=new Date(date);d.setDate(d.getDate()+n);return d;}
+function daysInMonth(y,mi){return new Date(y,mi+1,0).getDate();}
+function timeToMin(str){if(!str)return null;const m=/^(\d{1,2}):(\d{2})$/.exec(str.trim());if(!m)return null;const h=+m[1],min=+m[2];if(h>23||min>59)return null;return h*60+min;}
+function shiftMinutes(start,end){const a=timeToMin(start),b=timeToMin(end);if(a===null||b===null)return 0;let diff=b-a;if(diff<0)diff+=24*60;return diff;}
+function dayMinutes(entry){if(!entry)return 0;return shiftMinutes(entry.s1s,entry.s1e)+shiftMinutes(entry.s2s,entry.s2e);}
+function fmtHM(minutes,dashIfZero=false){if(!minutes)return dashIfZero?'—':'0 h';const h=Math.floor(minutes/60);const m=minutes%60;if(m===0)return `${h} h`;return `${h} h ${String(m).padStart(2,'0')}`;}
+function totalMinutesForRange(empId,fromDate,toDate){let total=0;let d=new Date(fromDate);while(d<=toDate){const key=`${empId}|${isoDate(d)}`;total+=dayMinutes(Data.planning[key]);d=addDays(d,1);}return total;}
+
+/* ============================================================
+   COQUILLE — notifications, édition, réglages
+   ============================================================ */
+let RERENDER=()=>{};
+function toast(msg){
+  let t=document.querySelector('.toast');
+  if(!t){t=document.createElement('div');t.className='toast';document.body.appendChild(t);}
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+function setEditing(on){
+  document.body.classList.toggle('editing',on);
+  document.querySelectorAll('.state').forEach(s=>s.textContent=on?'Édition':'Consultation');
+  document.querySelectorAll('.grid select,.grid input,.abs-grid select').forEach(el=>{el.disabled=!on;});
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function slug(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'x';}
+
+function buildSettings(dlg){
+  const body=dlg.querySelector('.sheet-body');
+  const c=Data.config;
+  const empRows=c.employees.map((e,i)=>`
+    <div class="row-item" data-emp="${i}">
+      <input type="text" value="${escapeHtml(e.name)}" data-field="name" aria-label="Nom de l'équipier">
+      <button class="ghost icon" data-del-emp="${i}" title="Retirer">✕</button>
+    </div>`).join('');
+  const roleRows=c.roles.map((r,i)=>`
+    <div class="row-item" data-role="${i}">
+      <span class="swatch" style="background:${r.bg};border-color:${r.br}"></span>
+      <input type="text" value="${escapeHtml(r.name)}" data-field="rname" aria-label="Nom du poste">
+      <button class="ghost icon" data-del-role="${i}" title="Retirer">✕</button>
+    </div>`).join('');
+  const codeRows=c.codes.map((x,i)=>`
+    <div class="row-item" data-code="${i}">
+      <span class="swatch" style="background:${x.bg};border-color:${x.br}"></span>
+      <input type="text" value="${escapeHtml(x.code)}" data-field="ccode" style="max-width:70px" aria-label="Code">
+      <input type="text" value="${escapeHtml(x.label)}" data-field="clabel" aria-label="Libellé">
+      <button class="ghost icon" data-del-code="${i}" title="Retirer">✕</button>
+    </div>`).join('');
+  body.innerHTML=`
+    <h4>Équipe</h4><div id="empList">${empRows}</div>
+    <div class="add-row"><input type="text" id="newEmp" placeholder="Nom du nouvel équipier…"><button id="addEmp">Ajouter</button></div>
+    <h4>Postes</h4><div id="roleList">${roleRows}</div>
+    <div class="add-row"><input type="text" id="newRole" placeholder="Nouveau poste…"><button id="addRole">Ajouter</button></div>
+    <h4>Codes d'absence</h4><div id="codeList">${codeRows}</div>
+    <div class="add-row"><input type="text" id="newCode" placeholder="Code" style="max-width:80px"><input type="text" id="newCodeLabel" placeholder="Libellé…"><button id="addCode">Ajouter</button></div>`;
+  const save=()=>{Data.saveConfig();RERENDER();};
+  body.querySelectorAll('[data-emp] input').forEach(inp=>inp.addEventListener('change',e=>{
+    const i=+e.target.closest('[data-emp]').dataset.emp;
+    c.employees[i].name=e.target.value.trim()||c.employees[i].name;save();}));
+  body.querySelectorAll('[data-role] input').forEach(inp=>inp.addEventListener('change',e=>{
+    const i=+e.target.closest('[data-role]').dataset.role;
+    c.roles[i].name=e.target.value.trim()||c.roles[i].name;save();}));
+  body.querySelectorAll('[data-code] input').forEach(inp=>inp.addEventListener('change',e=>{
+    const wrap=e.target.closest('[data-code]');const i=+wrap.dataset.code;const field=e.target.dataset.field;
+    if(field==='ccode')c.codes[i].code=e.target.value.trim().toUpperCase()||c.codes[i].code;
+    else c.codes[i].label=e.target.value.trim()||c.codes[i].label;save();}));
+  body.querySelectorAll('[data-del-emp]').forEach(b=>b.addEventListener('click',()=>{c.employees.splice(+b.dataset.delEmp,1);save();buildSettings(dlg);}));
+  body.querySelectorAll('[data-del-role]').forEach(b=>b.addEventListener('click',()=>{c.roles.splice(+b.dataset.delRole,1);save();buildSettings(dlg);}));
+  body.querySelectorAll('[data-del-code]').forEach(b=>b.addEventListener('click',()=>{c.codes.splice(+b.dataset.delCode,1);save();buildSettings(dlg);}));
+  body.querySelector('#addEmp').addEventListener('click',()=>{const v=body.querySelector('#newEmp').value.trim();if(!v)return;
+    c.employees.push({id:slug(v)+'-'+Math.random().toString(36).slice(2,6),name:v});save();buildSettings(dlg);});
+  body.querySelector('#addRole').addEventListener('click',()=>{const v=body.querySelector('#newRole').value.trim();if(!v)return;
+    c.roles.push({name:v,...Data.nextPastel(c.roles.length)});save();buildSettings(dlg);});
+  body.querySelector('#addCode').addEventListener('click',()=>{const code=body.querySelector('#newCode').value.trim().toUpperCase();
+    const label=body.querySelector('#newCodeLabel').value.trim();if(!code)return;
+    c.codes.push({code,label:label||code,...Data.nextPastel(c.codes.length)});save();buildSettings(dlg);});
+}
+
+/* ============================================================
+   MODULE PLANNING (cloisonné)
+   ============================================================ */
+const Planning=(function(){
+  let weekStart=mondayOf(new Date());
+  let filterEmp='all';
+
+  function render(){renderToolbar();renderGrid();renderRecap();setEditing(document.body.classList.contains('editing'));}
+
+  function renderToolbar(){
+    const sel=document.getElementById('pl-filter');
+    if(sel){
+      const cur=sel.value||'all';
+      sel.innerHTML=`<option value="all">Toute l'équipe</option>`+
+        Data.config.employees.map(e=>`<option value="${e.id}">${escapeHtml(e.name)}</option>`).join('');
+      sel.value=[...sel.options].some(o=>o.value===cur)?cur:'all';
+      filterEmp=sel.value;
+    }
+    const end=addDays(weekStart,6);
+    const label=document.getElementById('pl-period');
+    if(label){
+      const sameMonth=weekStart.getMonth()===end.getMonth();
+      const left=`${weekStart.getDate()} ${sameMonth?'':FR_MONTHS[weekStart.getMonth()]+' '}`;
+      label.textContent=`${left}– ${end.getDate()} ${FR_MONTHS[end.getMonth()]} ${end.getFullYear()}`;
+    }
+    const dp=document.getElementById('pl-picker');
+    if(dp)dp.value=isoDate(weekStart);
+  }
+
+  function renderGrid(){
+    const grid=document.getElementById('pl-grid');
+    const todayISO=isoDate(new Date());
+    const employees=Data.config.employees.filter(e=>filterEmp==='all'||e.id===filterEmp);
+    const days=Array.from({length:7},(_,i)=>addDays(weekStart,i));
+    let html='';
+    html+=`<div class="cell head-cell corner"><span>Équipier</span></div>`;
+    days.forEach((d,i)=>{
+      const weekend=i>=5;const today=isoDate(d)===todayISO;
+      html+=`<div class="cell head-cell ${weekend?'is-weekend':''} ${today?'is-today':''}">
+        <div class="dname">${FR_DAYS[i].slice(0,3)}</div><div class="dnum">${d.getDate()}</div></div>`;
+    });
+    html+=`<div class="cell head-cell"><div class="dname">Total</div><div class="dname">semaine</div></div>`;
+    const roleOptions=name=>`<option value="">— poste —</option>`+
+      Data.config.roles.map(r=>`<option value="${escapeHtml(r.name)}" ${r.name===name?'selected':''}>${escapeHtml(r.name)}</option>`).join('');
+    employees.forEach(emp=>{
+      const weekMin=totalMinutesForRange(emp.id,weekStart,addDays(weekStart,6));
+      html+=`<div class="cell name-cell"><span class="who">${escapeHtml(emp.name)}</span>
+        <span class="week-h">Semaine : <b>${fmtHM(weekMin)}</b></span></div>`;
+      days.forEach((d,i)=>{
+        const key=`${emp.id}|${isoDate(d)}`;const e=Data.planning[key]||{};
+        const dMin=dayMinutes(e);const role=Data.roleByName(e.role);
+        const roleStyle=role?`style="background:${role.bg};color:${role.fg};border-color:${role.br}"`:'';
+        html+=`<div class="cell day-cell ${i>=5?'is-weekend':''}" data-key="${key}">
+          <select class="role-select ${e.role?'has-role':''}" data-f="role" ${roleStyle}>${roleOptions(e.role||'')}</select>
+          <div class="shift"><input type="time" data-f="s1s" value="${e.s1s||''}" aria-label="Début créneau 1"><span class="sep">–</span><input type="time" data-f="s1e" value="${e.s1e||''}" aria-label="Fin créneau 1"></div>
+          <div class="shift"><input type="time" data-f="s2s" value="${e.s2s||''}" aria-label="Début créneau 2"><span class="sep">–</span><input type="time" data-f="s2e" value="${e.s2e||''}" aria-label="Fin créneau 2"></div>
+          <div class="day-total ${dMin?'':'zero'}">${fmtHM(dMin,true)}</div></div>`;
+      });
+      html+=`<div class="cell tot-cell"><span class="label">heures</span><span class="val">${fmtHM(weekMin)}</span></div>`;
+    });
+    html+=`<div class="cell foot-cell label">Total / jour</div>`;
+    let grand=0;
+    days.forEach(d=>{let sum=0;employees.forEach(emp=>{sum+=dayMinutes(Data.planning[`${emp.id}|${isoDate(d)}`]);});grand+=sum;
+      html+=`<div class="cell foot-cell">${fmtHM(sum,true)}</div>`;});
+    html+=`<div class="cell foot-cell grand">${fmtHM(grand)}</div>`;
+    grid.innerHTML=html;
+    grid.querySelectorAll('.day-cell').forEach(cellEl=>{
+      const key=cellEl.dataset.key;
+      cellEl.querySelectorAll('[data-f]').forEach(input=>{
+        input.addEventListener('change',()=>{
+          const entry=Data.planning[key]||{};entry[input.dataset.f]=input.value;
+          if(!entry.role&&!entry.s1s&&!entry.s1e&&!entry.s2s&&!entry.s2e){delete Data.planning[key];}
+          else{Data.planning[key]=entry;}
+          Data.savePlanning();renderGrid();renderRecap();setEditing(true);
+        });
+      });
+    });
+  }
+
+  function renderRecap(){
+    const wrap=document.getElementById('pl-recapVials');
+    const head=document.getElementById('pl-recapMonth');
+    if(!wrap)return;
+    const ref=addDays(weekStart,3);const y=ref.getFullYear(),m=ref.getMonth();
+    const first=new Date(y,m,1);const last=new Date(y,m,daysInMonth(y,m));
+    if(head)head.textContent=`${FR_MONTHS[m]} ${y}`;
+    const totals=Data.config.employees.map(emp=>({emp,min:totalMinutesForRange(emp.id,first,last)}));
+    const max=Math.max(60,...totals.map(t=>t.min));
+    wrap.innerHTML=totals.map(t=>{
+      const ratio=Math.min(1,t.min/max);
+      return `<div class="vial">${vialSVG(ratio)}<span class="who">${escapeHtml(t.emp.name)}</span><span class="h">${fmtHM(t.min)}</span></div>`;
+    }).join('');
+  }
+
+  function vialSVG(ratio){
+    const fullH=52;const h=Math.round(fullH*ratio);const y=18+(fullH-h);
+    const id='c'+Math.round(ratio*1000)+'_'+Math.random().toString(36).slice(2,6);
+    return `<svg viewBox="0 0 44 84" width="44" height="84" aria-hidden="true">
+      <defs><clipPath id="${id}"><path d="M16 6 h12 v8 l6 46 a12 12 0 0 1 -24 0 l6 -46 z"/></clipPath></defs>
+      <rect x="13" y="2" width="18" height="6" rx="2" fill="#E8E0D0" stroke="#C9AE7E"/>
+      <path d="M16 6 h12 v8 l6 46 a12 12 0 0 1 -24 0 l6 -46 z" fill="#FBF8F1" stroke="#C9AE7E" stroke-width="1.5"/>
+      <rect x="8" y="${y}" width="28" height="${h+6}" fill="#CDBBE4" clip-path="url(#${id})" opacity="0.9"/>
+      <ellipse cx="22" cy="${y+2}" rx="11" ry="2.2" fill="#E7DCF1" clip-path="url(#${id})"/></svg>`;
+  }
+
+  function wire(){
+    document.getElementById('pl-prev').addEventListener('click',()=>{weekStart=addDays(weekStart,-7);render();});
+    document.getElementById('pl-next').addEventListener('click',()=>{weekStart=addDays(weekStart,7);render();});
+    document.getElementById('pl-today').addEventListener('click',()=>{weekStart=mondayOf(new Date());render();});
+    document.getElementById('pl-picker').addEventListener('change',e=>{if(e.target.value){weekStart=mondayOf(parseISO(e.target.value));render();}});
+    document.getElementById('pl-filter').addEventListener('change',e=>{filterEmp=e.target.value;render();});
+  }
+
+  return {render,wire};
+})();
+
+/* ============================================================
+   MODULE ABSENCES (cloisonné)
+   ============================================================ */
+const Absences=(function(){
+  let viewYear=new Date().getFullYear();
+  let viewMonth=new Date().getMonth();
+
+  function render(){renderToolbar();renderLegend();renderAbsGrid();setEditing(document.body.classList.contains('editing'));}
+
+  function renderToolbar(){
+    const label=document.getElementById('ab-period');
+    if(label)label.textContent=`${FR_MONTHS[viewMonth][0].toUpperCase()}${FR_MONTHS[viewMonth].slice(1)} ${viewYear}`;
+    const yp=document.getElementById('ab-year');
+    if(yp)yp.value=viewYear;
+  }
+
+  function renderLegend(){
+    const el=document.getElementById('ab-legend');
+    if(!el)return;
+    el.innerHTML=Data.config.codes.map(c=>`<span class="chip" style="background:${c.bg};color:${c.fg};border-color:${c.br}">
+      <span class="code">${escapeHtml(c.code)}</span><span class="desc">${escapeHtml(c.label)}</span></span>`).join('');
+  }
+
+  function renderAbsGrid(){
+    const grid=document.getElementById('ab-grid');
+    const nDays=daysInMonth(viewYear,viewMonth);
+    grid.style.gridTemplateColumns=`150px repeat(${nDays},minmax(22px,1fr)) 64px`;
+    let html='';
+    html+=`<div class="acell abs-head corner">Équipier</div>`;
+    for(let d=1;d<=nDays;d++){const date=new Date(viewYear,viewMonth,d);const dow=(date.getDay()+6)%7;
+      html+=`<div class="acell abs-head ${dow>=5?'is-weekend':''}">${d}</div>`;}
+    html+=`<div class="acell abs-head tot">Jours</div>`;
+    html+=`<div class="acell abs-head corner"></div>`;
+    for(let d=1;d<=nDays;d++){const date=new Date(viewYear,viewMonth,d);const dow=(date.getDay()+6)%7;
+      html+=`<div class="acell abs-head dow ${dow>=5?'is-weekend':''}">${FR_DAYS[dow][0].toUpperCase()}</div>`;}
+    html+=`<div class="acell abs-head tot"></div>`;
+    const codeOptions=sel=>`<option value=""></option>`+
+      Data.config.codes.map(c=>`<option value="${escapeHtml(c.code)}" ${c.code===sel?'selected':''}>${escapeHtml(c.code)}</option>`).join('');
+    Data.config.employees.forEach(emp=>{
+      html+=`<div class="acell abs-name">${escapeHtml(emp.name)}</div>`;
+      let count=0;
+      for(let d=1;d<=nDays;d++){
+        const date=new Date(viewYear,viewMonth,d);const dow=(date.getDay()+6)%7;
+        const key=`${emp.id}|${isoDate(date)}`;const code=Data.absences[key]||'';
+        if(code)count++;
+        const c=Data.codeByCode(code);const style=c?`style="background:${c.bg};color:${c.fg}"`:'';
+        html+=`<div class="acell abs-cell ${dow>=5?'is-weekend':''}" ${style} data-key="${key}">
+          <select data-key="${key}" title="${c?escapeHtml(c.label):'Aucune absence'}">${codeOptions(code)}</select></div>`;
+      }
+      html+=`<div class="acell abs-tot ${count?'':'zero'}">${count||'—'}</div>`;
+    });
+    grid.innerHTML=html;
+    grid.querySelectorAll('.abs-cell select').forEach(sel=>{
+      sel.addEventListener('change',()=>{
+        const key=sel.dataset.key;
+        if(sel.value)Data.absences[key]=sel.value;else delete Data.absences[key];
+        Data.saveAbsences();renderAbsGrid();setEditing(true);
+      });
+    });
+  }
+
+  function wire(){
+    document.getElementById('ab-prev').addEventListener('click',()=>{viewMonth--;if(viewMonth<0){viewMonth=11;viewYear--;}render();});
+    document.getElementById('ab-next').addEventListener('click',()=>{viewMonth++;if(viewMonth>11){viewMonth=0;viewYear++;}render();});
+    document.getElementById('ab-today').addEventListener('click',()=>{viewYear=new Date().getFullYear();viewMonth=new Date().getMonth();render();});
+    document.getElementById('ab-year').addEventListener('change',e=>{const v=parseInt(e.target.value,10);if(!isNaN(v)){viewYear=v;render();}});
+  }
+
+  return {render,wire};
+})();
+
+/* ============================================================
+   COORDINATION — onglets, édition, publication, démarrage
+   ============================================================ */
+function renderAll(){Planning.render();Absences.render();}
+
+function switchView(name){
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
+  document.getElementById('view-planning').classList.toggle('active',name==='planning');
+  document.getElementById('view-absences').classList.toggle('active',name==='absences');
+}
+
+(async function start(){
+  Data.load();
+  await Data.seedFromFileIfEmpty();
+  Data.load();
+
+  RERENDER=renderAll;
+
+  // onglets
+  document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));
+
+  // bascule édition (les deux boutons ✎)
+  document.querySelectorAll('#editToggle,#editToggle2').forEach(btn=>
+    btn.addEventListener('click',()=>setEditing(!document.body.classList.contains('editing'))));
+
+  // export
+  document.getElementById('exportBtn').addEventListener('click',()=>{
+    const blob=new Blob([JSON.stringify(Data.exportBundle(),null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='planning-data.json';a.click();
+    URL.revokeObjectURL(a.href);toast('Fichier planning-data.json téléchargé');
+  });
+
+  // import
+  const impInput=document.getElementById('importInput');
+  document.getElementById('importBtn').addEventListener('click',()=>impInput.click());
+  impInput.addEventListener('change',async()=>{
+    const file=impInput.files[0];if(!file)return;
+    try{const json=JSON.parse(await file.text());Data.applyImport(json);renderAll();toast('Planning importé');}
+    catch(e){toast('Fichier illisible');}
+    impInput.value='';
+  });
+
+  // recharger le publié
+  document.getElementById('loadPublishedBtn').addEventListener('click',async()=>{
+    try{await Data.loadPublished();renderAll();toast('Planning publié rechargé');}
+    catch(e){toast('Aucun planning publié trouvé');}
+  });
+
+  // réglages (deux boutons, un seul dialogue)
+  const dlg=document.getElementById('settingsDialog');
+  document.querySelectorAll('#pl-settings,#ab-settings').forEach(btn=>
+    btn.addEventListener('click',()=>{buildSettings(dlg);dlg.showModal();}));
+  dlg.querySelector('.sheet-close').addEventListener('click',()=>dlg.close());
+
+  Planning.wire();
+  Absences.wire();
+  renderAll();
+})();
+</script>
+</body>
+</html>
