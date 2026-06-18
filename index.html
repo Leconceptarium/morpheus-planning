@@ -96,6 +96,10 @@ body.editing .toggle-edit .dot{background:#8bbf86;}
 .name-cell .week-h b{color:var(--ink);font-weight:800;}
 .day-cell{padding:8px 7px;display:flex;flex-direction:column;gap:6px;min-height:118px;}
 .day-cell.is-weekend{background:rgba(221,211,194,.18);}
+.day-cell.absent{justify-content:center;align-items:center;gap:6px;background:rgba(221,211,194,.30);}
+.abs-badge{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;padding:8px 8px;border:1px solid;border-radius:8px;width:100%;}
+.abs-badge .abs-code{font-weight:800;font-size:.95rem;letter-spacing:.04em;}
+.abs-badge .abs-label{font-size:.66rem;font-weight:600;opacity:.85;line-height:1.15;}
 .role-select{width:100%;font-size:.78rem;padding:5px 6px;}
 .role-select.has-role{font-weight:700;}
 .shift{display:flex;align-items:center;gap:3px;}
@@ -315,6 +319,7 @@ const DEFAULT_CONFIG={
     {name:'Bar',...PASTELS[2]},
     {name:'Bar/Escape',...PASTELS[3]},
     {name:'Repos',...PASTELS[4]},
+    {name:'Formation',...PASTELS[5]},
   ],
   codes:[
     {code:'CP',label:'Congé payé',...PASTELS[1]},
@@ -337,6 +342,13 @@ const Data={
     this.config=lsGet(STORE.config,null)||deepClone(DEFAULT_CONFIG);
     this.planning=lsGet(STORE.planning,null)||{};
     this.absences=lsGet(STORE.absences,null)||{};
+    this.ensureDefaults();
+  },
+  ensureDefaults(){
+    if(this.config&&Array.isArray(this.config.roles)&&!this.config.roles.some(r=>r.name==='Formation')){
+      this.config.roles.push({name:'Formation',...PASTELS[5]});
+      this.saveConfig();
+    }
   },
   saveConfig(){lsSet(STORE.config,this.config);},
   savePlanning(){lsSet(STORE.planning,this.planning);},
@@ -384,7 +396,8 @@ function timeToMin(str){if(!str)return null;const m=/^(\d{1,2}):(\d{2})$/.exec(s
 function shiftMinutes(start,end){const a=timeToMin(start),b=timeToMin(end);if(a===null||b===null)return 0;let diff=b-a;if(diff<0)diff+=24*60;return diff;}
 function dayMinutes(entry){if(!entry)return 0;return shiftMinutes(entry.s1s,entry.s1e)+shiftMinutes(entry.s2s,entry.s2e);}
 function fmtHM(minutes,dashIfZero=false){if(!minutes)return dashIfZero?'—':'0 h';const h=Math.floor(minutes/60);const m=minutes%60;if(m===0)return `${h} h`;return `${h} h ${String(m).padStart(2,'0')}`;}
-function totalMinutesForRange(empId,fromDate,toDate){let total=0;let d=new Date(fromDate);while(d<=toDate){const key=`${empId}|${isoDate(d)}`;total+=dayMinutes(Data.planning[key]);d=addDays(d,1);}return total;}
+function workedDayMinutes(empId,iso){const key=`${empId}|${iso}`;if(Data.absences&&Data.absences[key])return 0;return dayMinutes(Data.planning[key]);}
+function totalMinutesForRange(empId,fromDate,toDate){let total=0;let d=new Date(fromDate);while(d<=toDate){total+=workedDayMinutes(empId,isoDate(d));d=addDays(d,1);}return total;}
 
 /* ============================================================
    COQUILLE — notifications, édition, réglages
@@ -505,6 +518,15 @@ const Planning=(function(){
         <span class="week-h">Semaine : <b>${fmtHM(weekMin)}</b></span></div>`;
       days.forEach((d,i)=>{
         const key=`${emp.id}|${isoDate(d)}`;const e=Data.planning[key]||{};
+        const absCode=Data.absences[key]||'';
+        if(absCode){
+          const ac=Data.codeByCode(absCode);
+          const acStyle=ac?`style="background:${ac.bg};color:${ac.fg};border-color:${ac.br}"`:'';
+          html+=`<div class="cell day-cell absent ${i>=5?'is-weekend':''}" data-key="${key}">
+            <div class="abs-badge" ${acStyle}><span class="abs-code">${escapeHtml(absCode)}</span>${ac?`<span class="abs-label">${escapeHtml(ac.label)}</span>`:''}</div>
+            <div class="day-total zero">—</div></div>`;
+          return;
+        }
         const dMin=dayMinutes(e);const role=Data.roleByName(e.role);
         const roleStyle=role?`style="background:${role.bg};color:${role.fg};border-color:${role.br}"`:'';
         html+=`<div class="cell day-cell ${i>=5?'is-weekend':''}" data-key="${key}">
@@ -517,7 +539,7 @@ const Planning=(function(){
     });
     html+=`<div class="cell foot-cell label">Total / jour</div>`;
     let grand=0;
-    days.forEach(d=>{let sum=0;employees.forEach(emp=>{sum+=dayMinutes(Data.planning[`${emp.id}|${isoDate(d)}`]);});grand+=sum;
+    days.forEach(d=>{let sum=0;employees.forEach(emp=>{sum+=workedDayMinutes(emp.id,isoDate(d));});grand+=sum;
       html+=`<div class="cell foot-cell">${fmtHM(sum,true)}</div>`;});
     html+=`<div class="cell foot-cell grand">${fmtHM(grand)}</div>`;
     grid.innerHTML=html;
@@ -651,6 +673,7 @@ function switchView(name){
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
   document.getElementById('view-planning').classList.toggle('active',name==='planning');
   document.getElementById('view-absences').classList.toggle('active',name==='absences');
+  renderAll();
 }
 
 (async function start(){
