@@ -1,0 +1,409 @@
+{
+  "_format": "morpheus-planning",
+  "_exportedAt": "2026-06-18T21:09:57.366Z",
+  "config": {
+    "team": "Morpheus Experience",
+    "employees": [
+      {
+        "id": "maxence",
+        "name": "Maxence T"
+      },
+      {
+        "id": "damien",
+        "name": "Damien J"
+      },
+      {
+        "id": "yousra",
+        "name": "Yousra"
+      },
+      {
+        "id": "johan",
+        "name": "Johan"
+      }
+    ],
+    "roles": [
+      {
+        "name": "Game master",
+        "bg": "#E7DCF1",
+        "fg": "#4A3A63",
+        "br": "#CDBBE4"
+      },
+      {
+        "name": "Soutien",
+        "bg": "#DEEBD7",
+        "fg": "#3F5436",
+        "br": "#BFD6B2"
+      },
+      {
+        "name": "Bar",
+        "bg": "#F4E3BE",
+        "fg": "#6B5320",
+        "br": "#E4CD93"
+      },
+      {
+        "name": "Bar/Escape",
+        "bg": "#D6E9E6",
+        "fg": "#2F5450",
+        "br": "#AFD4CE"
+      },
+      {
+        "name": "Repos",
+        "bg": "#EBD9DA",
+        "fg": "#6A4044",
+        "br": "#DBBCC0"
+      },
+      {
+        "name": "Formation",
+        "bg": "#DCE2EC",
+        "fg": "#3A4658",
+        "br": "#C0CAD9"
+      },
+      {
+        "name": "Créa-maintenance",
+        "bg": "#EFE0D2",
+        "fg": "#6A4B33",
+        "br": "#E0C7AE"
+      }
+    ],
+    "codes": [
+      {
+        "code": "CP",
+        "label": "Congé payé",
+        "bg": "#DEEBD7",
+        "fg": "#3F5436",
+        "br": "#BFD6B2"
+      },
+      {
+        "code": "RTT",
+        "label": "RTT",
+        "bg": "#E7DCF1",
+        "fg": "#4A3A63",
+        "br": "#CDBBE4"
+      },
+      {
+        "code": "M",
+        "label": "Maladie ou maternité",
+        "bg": "#EBD9DA",
+        "fg": "#6A4044",
+        "br": "#DBBCC0"
+      },
+      {
+        "code": "RH",
+        "label": "Repos hebdomadaire",
+        "bg": "#DCE2EC",
+        "fg": "#3A4658",
+        "br": "#C0CAD9"
+      },
+      {
+        "code": "RC",
+        "label": "Repos compensateur",
+        "bg": "#D6E9E6",
+        "fg": "#2F5450",
+        "br": "#AFD4CE"
+      },
+      {
+        "code": "CEF",
+        "label": "Congé pour événement familial",
+        "bg": "#F4E3BE",
+        "fg": "#6B5320",
+        "br": "#E4CD93"
+      },
+      {
+        "code": "AB",
+        "label": "Absent",
+        "bg": "#EFE0D2",
+        "fg": "#6A4B33",
+        "br": "#E0C7AE"
+      }
+    ]
+  },
+  "planning": {
+    "damien|2026-07-13": {
+      "role": "Formation",
+      "s1s": "",
+      "s1e": "",
+      "s2s": "13:00",
+      "s2e": "19:30"
+    },
+    "damien|2026-07-14": {
+      "role": "Créa-maintenance",
+      "s2s": "13:00",
+      "s2e": "19:30"
+    },
+    "damien|2026-07-16": {
+      "role": "Formation",
+      "s2s": "14:00",
+      "s2e": "19:30"
+    },
+    "damien|2026-07-17": {
+      "role": "Repos"
+    },
+    "damien|2026-07-18": {
+      "role": "Repos"
+    },
+    "johan|2026-07-14": {
+      "role": "Repos"
+    },
+    "johan|2026-07-15": {
+      "role": "Repos"
+    },
+    "johan|2026-07-16": {
+      "role": "Repos"
+    },
+    "johan|2026-07-17": {
+      "role": "Repos"
+    },
+    "johan|2026-07-18": {
+      "role": "Repos"
+    },
+    "damien|2026-07-19": {
+      "role": "Game master",
+      "s1e": "",
+      "s1s": "",
+      "s2s": "16:00",
+      "s2e": "22:00"
+    },
+    "damien|2026-07-15": {
+      "role": "Créa-maintenance",
+      "s1s": "",
+      "s1e": "",
+      "s2s": "13:00",
+      "s2e": "19:30"
+    },
+    "johan|2026-07-19": {
+      "role": "Bar/Escape",
+      "s1e": "22:00",
+      "s1s": "13:30"
+    },
+    "maxence|2026-07-19": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "22:00"
+    },
+    "yousra|2026-07-18": {
+      "role": "Formation",
+      "s2s": "15:00",
+      "s2e": "19:00"
+    },
+    "maxence|2026-07-18": {
+      "role": "Créa-maintenance",
+      "s2s": "14:00",
+      "s2e": "19:00"
+    },
+    "johan|2026-07-13": {
+      "role": "Formation",
+      "s1s": "10:30",
+      "s1e": "19:30"
+    },
+    "yousra|2026-07-13": {
+      "role": "Formation",
+      "s1s": "",
+      "s1e": "",
+      "s2s": "15:00",
+      "s2e": "19:30"
+    },
+    "yousra|2026-07-14": {
+      "role": "Repos"
+    },
+    "yousra|2026-07-15": {
+      "role": "Repos",
+      "s2s": "",
+      "s2e": ""
+    },
+    "yousra|2026-07-16": {
+      "role": "Formation",
+      "s2s": "14:00",
+      "s2e": "19:30"
+    },
+    "maxence|2026-07-16": {
+      "role": "Formation",
+      "s2s": "13:30",
+      "s2e": "19:30"
+    },
+    "maxence|2026-07-13": {
+      "role": "Formation",
+      "s1s": "10:30",
+      "s1e": "19:30",
+      "s2s": "",
+      "s2e": ""
+    },
+    "maxence|2026-07-14": {
+      "role": "Créa-maintenance",
+      "s1s": "",
+      "s1e": "",
+      "s2s": "13:00",
+      "s2e": "19:00"
+    },
+    "maxence|2026-07-15": {
+      "role": "Créa-maintenance",
+      "s1s": "",
+      "s1e": "",
+      "s2s": "13:00",
+      "s2e": "19:00"
+    },
+    "maxence|2026-07-17": {
+      "role": "Créa-maintenance",
+      "s1s": "",
+      "s1e": "",
+      "s2e": "19:00",
+      "s2s": "14:00"
+    },
+    "yousra|2026-07-17": {
+      "role": "Repos"
+    },
+    "yousra|2026-07-19": {
+      "role": "Bar",
+      "s1s": "09:30",
+      "s1e": "15:30"
+    },
+    "johan|2026-07-21": {
+      "role": "Bar/Escape",
+      "s2s": "13:45",
+      "s2e": "21:45"
+    },
+    "johan|2026-07-20": {
+      "role": "Bar/Escape",
+      "s2s": "13:45",
+      "s2e": "21:45"
+    },
+    "maxence|2026-07-20": {
+      "role": "Bar/Escape",
+      "s1s": "",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-07-21": {
+      "role": "Bar/Escape",
+      "s2s": "13:30",
+      "s2e": "21:45"
+    },
+    "johan|2026-07-26": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:30"
+    },
+    "maxence|2026-07-26": {
+      "role": "Bar/Escape",
+      "s1s": "",
+      "s1e": "",
+      "s2s": "09:30",
+      "s2e": "22:00"
+    },
+    "damien|2026-07-25": {
+      "role": "Game master",
+      "s2e": "",
+      "s2s": "",
+      "s1s": "09:30",
+      "s1e": "15:30"
+    },
+    "maxence|2026-07-25": {
+      "role": "Bar/Escape",
+      "s2s": "09:30",
+      "s2e": "00:30",
+      "s1s": "",
+      "s1e": ""
+    },
+    "yousra|2026-07-25": {
+      "role": "Bar",
+      "s1s": "",
+      "s1e": "",
+      "s2s": "14:30",
+      "s2e": "00:20"
+    },
+    "damien|2026-07-24": {
+      "role": "Game master",
+      "s1s": "09:30",
+      "s1e": "15:30"
+    },
+    "yousra|2026-07-20": {
+      "role": "Repos"
+    },
+    "damien|2026-07-20": {
+      "role": "Repos"
+    },
+    "damien|2026-07-21": {
+      "role": "Repos"
+    },
+    "yousra|2026-07-21": {
+      "role": "Repos"
+    },
+    "yousra|2026-07-24": {
+      "role": "Bar",
+      "s2s": "14:45",
+      "s2e": "00:15"
+    },
+    "damien|2026-07-22": {
+      "role": "Game master",
+      "s1s": "",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "damien|2026-07-23": {
+      "role": "Game master",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "yousra|2026-07-26": {
+      "role": "Repos",
+      "s2s": "",
+      "s2e": ""
+    },
+    "yousra|2026-07-23": {
+      "role": "Repos"
+    },
+    "yousra|2026-07-22": {
+      "role": "Repos"
+    },
+    "maxence|2026-07-24": {
+      "s2s": "09:30",
+      "s2e": "00:30",
+      "role": "Bar/Escape"
+    },
+    "maxence|2026-07-23": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-07-22": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "damien|2026-07-26": {
+      "role": "Game master",
+      "s1s": "",
+      "s1e": "",
+      "s2s": "15:30",
+      "s2e": "22:00"
+    }
+  },
+  "absences": {
+    "johan|2026-07-01": "AB",
+    "johan|2026-07-02": "AB",
+    "johan|2026-07-03": "AB",
+    "johan|2026-07-04": "AB",
+    "johan|2026-07-05": "AB",
+    "johan|2026-07-08": "AB",
+    "johan|2026-07-09": "AB",
+    "johan|2026-07-10": "AB",
+    "johan|2026-07-14": "AB",
+    "johan|2026-07-15": "AB",
+    "johan|2026-07-16": "AB",
+    "johan|2026-07-17": "AB",
+    "johan|2026-07-18": "AB",
+    "damien|2026-07-18": "RH",
+    "damien|2026-07-17": "RH",
+    "damien|2026-07-19": "AB",
+    "johan|2026-07-22": "AB",
+    "johan|2026-07-23": "AB",
+    "johan|2026-07-24": "AB",
+    "johan|2026-07-25": "AB",
+    "johan|2026-07-31": "AB",
+    "johan|2026-07-30": "AB",
+    "johan|2026-07-29": "AB",
+    "damien|2026-08-08": "RC",
+    "yousra|2026-07-14": "RH",
+    "yousra|2026-07-17": "RH",
+    "yousra|2026-07-15": "RH"
+  }
+}
