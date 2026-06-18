@@ -107,6 +107,8 @@ body.editing .toggle-edit .dot{background:#8bbf86;}
 .shift .sep{color:var(--ink-faint);font-size:.8rem;}
 .day-total{margin-top:auto;text-align:right;font-size:.78rem;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
 .day-total.zero{color:var(--ink-faint);font-weight:600;}
+.break-tag{text-align:right;font-size:.64rem;font-style:italic;font-weight:700;color:var(--gilt);margin-top:auto;}
+.break-tag + .day-total{margin-top:2px;}
 .tot-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 8px;background:var(--vellum-2);}
 .tot-cell .label{font-size:.64rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);}
 .tot-cell .val{font-family:var(--font-display);font-size:1.4rem;color:var(--ink);font-variant-numeric:tabular-nums;}
@@ -197,7 +199,7 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
     <div class="page-head">
       <div>
         <h1 class="page-title">Planning de travail</h1>
-        <p class="page-sub">Bonne semaine .</p>
+        <p class="page-sub">Les heures se calculent toutes seules — pause légale de 20 min incluse dès que la journée dépasse 6h. Choisis le poste, renseigne les créneaux.</p>
       </div>
       <div class="toggle-edit" title="Passer en édition pour modifier">
         <button id="editToggle" class="ghost icon" aria-label="Basculer édition">✎</button>
@@ -399,8 +401,11 @@ function timeToMin(str){if(!str)return null;const m=/^(\d{1,2}):(\d{2})$/.exec(s
 function shiftMinutes(start,end){const a=timeToMin(start),b=timeToMin(end);if(a===null||b===null)return 0;let diff=b-a;if(diff<0)diff+=24*60;return diff;}
 function dayMinutes(entry){if(!entry)return 0;return shiftMinutes(entry.s1s,entry.s1e)+shiftMinutes(entry.s2s,entry.s2e);}
 function fmtHM(minutes,dashIfZero=false){if(!minutes)return dashIfZero?'—':'0 h';const h=Math.floor(minutes/60);const m=minutes%60;if(m===0)return `${h} h`;return `${h} h ${String(m).padStart(2,'0')}`;}
+const BREAK_MIN=20;const BREAK_BLOCK=360; // pause légale : 20 min par tranche de 6h, dès que la journée dépasse 6h
 function workedDayMinutes(empId,iso){const key=`${empId}|${iso}`;if(Data.absences&&Data.absences[key])return 0;return dayMinutes(Data.planning[key]);}
-function totalMinutesForRange(empId,fromDate,toDate){let total=0;let d=new Date(fromDate);while(d<=toDate){total+=workedDayMinutes(empId,isoDate(d));d=addDays(d,1);}return total;}
+function breakMinutesFor(workedMin){return workedMin>BREAK_BLOCK?BREAK_MIN*Math.floor(workedMin/BREAK_BLOCK):0;}
+function countedDayMinutes(empId,iso){const w=workedDayMinutes(empId,iso);return w+breakMinutesFor(w);}
+function totalMinutesForRange(empId,fromDate,toDate){let total=0;let d=new Date(fromDate);while(d<=toDate){total+=countedDayMinutes(empId,isoDate(d));d=addDays(d,1);}return total;}
 
 /* ============================================================
    COQUILLE — notifications, édition, réglages
@@ -530,19 +535,20 @@ const Planning=(function(){
             <div class="day-total zero">—</div></div>`;
           return;
         }
-        const dMin=dayMinutes(e);const role=Data.roleByName(e.role);
+        const dMin=dayMinutes(e);const brk=breakMinutesFor(dMin);const counted=dMin+brk;const role=Data.roleByName(e.role);
         const roleStyle=role?`style="background:${role.bg};color:${role.fg};border-color:${role.br}"`:'';
         html+=`<div class="cell day-cell ${i>=5?'is-weekend':''}" data-key="${key}">
           <select class="role-select ${e.role?'has-role':''}" data-f="role" ${roleStyle}>${roleOptions(e.role||'')}</select>
           <div class="shift ${(e.s1s||e.s1e)?'':'empty'}"><input type="time" data-f="s1s" value="${e.s1s||''}" aria-label="Début créneau 1"><span class="sep">–</span><input type="time" data-f="s1e" value="${e.s1e||''}" aria-label="Fin créneau 1"></div>
           <div class="shift ${(e.s2s||e.s2e)?'':'empty'}"><input type="time" data-f="s2s" value="${e.s2s||''}" aria-label="Début créneau 2"><span class="sep">–</span><input type="time" data-f="s2e" value="${e.s2e||''}" aria-label="Fin créneau 2"></div>
-          <div class="day-total ${dMin?'':'zero'}">${fmtHM(dMin,true)}</div></div>`;
+          ${brk?`<div class="break-tag">+${brk} min pause</div>`:''}
+          <div class="day-total ${counted?'':'zero'}">${fmtHM(counted,true)}</div></div>`;
       });
       html+=`<div class="cell tot-cell"><span class="label">heures</span><span class="val">${fmtHM(weekMin)}</span></div>`;
     });
     html+=`<div class="cell foot-cell label">Total / jour</div>`;
     let grand=0;
-    days.forEach(d=>{let sum=0;employees.forEach(emp=>{sum+=workedDayMinutes(emp.id,isoDate(d));});grand+=sum;
+    days.forEach(d=>{let sum=0;employees.forEach(emp=>{sum+=countedDayMinutes(emp.id,isoDate(d));});grand+=sum;
       html+=`<div class="cell foot-cell">${fmtHM(sum,true)}</div>`;});
     html+=`<div class="cell foot-cell grand">${fmtHM(grand)}</div>`;
     grid.innerHTML=html;
