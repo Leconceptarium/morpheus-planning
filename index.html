@@ -322,6 +322,7 @@ const DEFAULT_CONFIG={
     {name:'Bar/Escape',...PASTELS[3]},
     {name:'Repos',...PASTELS[4]},
     {name:'Formation',...PASTELS[5]},
+    {name:'Créa-maintenance',...PASTELS[6]},
   ],
   codes:[
     {code:'CP',label:'Congé payé',...PASTELS[1]},
@@ -347,9 +348,9 @@ const Data={
     this.ensureDefaults();
   },
   ensureDefaults(){
-    if(this.config&&Array.isArray(this.config.roles)&&!this.config.roles.some(r=>r.name==='Formation')){
-      this.config.roles.push({name:'Formation',...PASTELS[5]});
-      this.saveConfig();
+    if(this.config&&Array.isArray(this.config.roles)){
+      if(!this.config.roles.some(r=>r.name==='Formation')){this.config.roles.push({name:'Formation',...PASTELS[5]});this.saveConfig();}
+      if(!this.config.roles.some(r=>r.name==='Créa-maintenance')){this.config.roles.push({name:'Créa-maintenance',...PASTELS[6]});this.saveConfig();}
     }
   },
   saveConfig(){lsSet(STORE.config,this.config);},
