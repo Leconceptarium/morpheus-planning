@@ -118,6 +118,17 @@ body.editing .toggle-edit .dot{background:#8bbf86;}
 .emprow .etimes{font-size:.76rem;color:var(--ink-soft);font-weight:600;}
 .emprow .eh{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:800;font-size:.92rem;color:var(--ink);}
 .emprow .eh.zero{color:var(--ink-faint);font-weight:600;}
+/* tableau heures par equipier */
+.hours-table{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+.hours-table .hrow{display:grid;grid-template-columns:minmax(110px,1fr) 1.6fr auto;gap:14px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--line-soft);}
+.hours-table .hrow:last-child{border-bottom:none;}
+.hours-table .hhead{background:var(--vellum-2);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:800;}
+.hours-table .hn{font-family:var(--font-display);font-size:1.12rem;color:var(--ink);}
+.hours-table .hbar{display:flex;align-items:center;gap:9px;}
+.hours-table .hbar i{display:block;height:10px;border-radius:999px;background:var(--gilt-soft);min-width:3px;}
+.hours-table .hbar b{font-variant-numeric:tabular-nums;font-weight:800;color:var(--ink);}
+.hours-table .havg{font-variant-numeric:tabular-nums;color:var(--ink-soft);font-weight:700;text-align:right;white-space:nowrap;}
+@media(max-width:640px){.hours-table .hrow{grid-template-columns:1fr auto;gap:8px;}.hours-table .hbar{order:3;grid-column:1 / -1;}}
 .day-cell{padding:8px 7px;display:flex;flex-direction:column;gap:6px;min-height:118px;}
 .day-cell.is-weekend{background:rgba(221,211,194,.18);}
 .day-cell.absent{justify-content:center;align-items:center;gap:6px;background:rgba(221,211,194,.30);}
@@ -265,6 +276,11 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
     </div>
     <div class="scroll-x pl-desktop"><div class="grid" id="pl-grid"></div></div>
     <div class="pl-mobile" id="pl-grid-mobile"></div>
+    <section class="recap" id="pl-hours-wrap">
+      <h2>Heures par équipier</h2>
+      <p class="hint">Total de la semaine affichée, et moyenne hebdomadaire sur le mois (utile pour calibrer les contrats).</p>
+      <div class="hours-table" id="pl-hours"></div>
+    </section>
     <section class="recap">
       <h2>Récapitulatif du mois — <span id="pl-recapMonth"></span></h2>
       <p class="hint">Total d'heures cumulées sur le mois. Le niveau de chaque fiole est relatif à l'équipier le plus présent.</p>
@@ -595,7 +611,30 @@ const Planning=(function(){
   let weekStart=mondayOf(new Date());
   let filterEmp='all';
 
-  function render(){renderToolbar();renderGrid();renderMobile();renderRecap();setEditing(document.body.classList.contains('editing'));}
+  function render(){renderToolbar();renderGrid();renderMobile();renderHoursRecap();renderRecap();setEditing(document.body.classList.contains('editing'));}
+
+  function renderHoursRecap(){
+    const wrap=document.getElementById('pl-hours');
+    if(!wrap)return;
+    const ref=addDays(weekStart,3);const y=ref.getFullYear(),m=ref.getMonth();
+    const first=new Date(y,m,1),last=new Date(y,m,daysInMonth(y,m));
+    const dim=daysInMonth(y,m);
+    const rows=Data.config.employees.map(emp=>{
+      const wk=totalMinutesForRange(emp.id,weekStart,addDays(weekStart,6));
+      const mon=totalMinutesForRange(emp.id,first,last);
+      const avg=Math.round(mon*7/dim);
+      return {emp,wk,avg};
+    });
+    const maxWk=Math.max(60,...rows.map(r=>r.wk));
+    let html=`<div class="hrow hhead"><span>Équipier</span><span>Cette semaine</span><span>Moy./sem. (mois)</span></div>`;
+    rows.forEach(r=>{
+      const pct=Math.round((r.wk/maxWk)*100);
+      html+=`<div class="hrow"><span class="hn">${escapeHtml(r.emp.name)}</span>`+
+        `<span class="hbar"><i style="width:${pct}%"></i><b>${fmtHM(r.wk)}</b></span>`+
+        `<span class="havg">${fmtHM(r.avg)}</span></div>`;
+    });
+    wrap.innerHTML=html;
+  }
 
   function renderMobile(){
     const wrap=document.getElementById('pl-grid-mobile');
@@ -707,7 +746,7 @@ const Planning=(function(){
           const entry=Data.planning[key]||{};entry[input.dataset.f]=input.value;
           if(!entry.role&&!entry.s1s&&!entry.s1e&&!entry.s2s&&!entry.s2e){delete Data.planning[key];}
           else{Data.planning[key]=entry;}
-          Data.savePlanning();renderGrid();renderMobile();renderRecap();setEditing(true);
+          Data.savePlanning();renderGrid();renderMobile();renderHoursRecap();renderRecap();setEditing(true);
         });
       });
     });
