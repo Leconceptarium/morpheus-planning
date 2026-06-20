@@ -102,6 +102,22 @@ body.editing .toggle-edit .dot{background:#8bbf86;}
 .counters .chead{background:var(--vellum-2);font-weight:800;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);}
 .counters .cname{text-align:left;font-family:var(--font-display);font-size:1.05rem;color:var(--ink);background:var(--panel);}
 .counters .czero{color:var(--ink-faint);}
+/* vue mobile planning en liste par jour */
+.pl-mobile{display:none;}
+.daycard{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;}
+.daycard.weekend .daycard-head{background:#ECE7DA;}
+.daycard-head{display:flex;justify-content:space-between;align-items:baseline;padding:10px 14px;background:var(--vellum-2);border-bottom:1px solid var(--line);}
+.daycard-head .dn{font-family:var(--font-display);font-size:1.25rem;color:var(--ink);text-transform:capitalize;}
+.daycard-head .dd{font-size:.82rem;color:var(--ink-soft);font-weight:700;}
+.daycard-head.today{box-shadow:inset 0 -3px 0 var(--gilt-soft);}
+.daycard-head.today .dn{color:var(--gilt);}
+.emprow{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--line-soft);flex-wrap:wrap;}
+.emprow:last-child{border-bottom:none;}
+.emprow .en{flex:1 1 100%;font-weight:800;color:var(--ink);font-size:.9rem;}
+.emprow .role-chip,.emprow .eabs{font-size:.72rem;font-weight:800;padding:2px 9px;border-radius:999px;border:1px solid;}
+.emprow .etimes{font-size:.76rem;color:var(--ink-soft);font-weight:600;}
+.emprow .eh{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:800;font-size:.92rem;color:var(--ink);}
+.emprow .eh.zero{color:var(--ink-faint);font-weight:600;}
 .day-cell{padding:8px 7px;display:flex;flex-direction:column;gap:6px;min-height:118px;}
 .day-cell.is-weekend{background:rgba(221,211,194,.18);}
 .day-cell.absent{justify-content:center;align-items:center;gap:6px;background:rgba(221,211,194,.30);}
@@ -180,6 +196,8 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
   .head-cell.corner{position:sticky;left:0;z-index:3;}
   .abs-grid .abs-name,.abs-grid .abs-head.corner{position:sticky;left:0;z-index:2;box-shadow:2px 0 6px rgba(59,50,71,.08);}
   .name-cell .who{font-size:1rem;}
+  .pl-desktop{display:none;}
+  .pl-mobile{display:block;}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none !important;}}
 @media print{body{background:#fff;}.masthead .nav,.toolbar,.note,.toggle-edit,button{display:none !important;}.scroll-x{overflow:visible;}.grid,.abs-grid{box-shadow:none;min-width:0;}.page{padding:0;}}
@@ -245,7 +263,8 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
       </div>
       <button id="pl-settings" class="ghost">Équipe &amp; postes</button>
     </div>
-    <div class="scroll-x"><div class="grid" id="pl-grid"></div></div>
+    <div class="scroll-x pl-desktop"><div class="grid" id="pl-grid"></div></div>
+    <div class="pl-mobile" id="pl-grid-mobile"></div>
     <section class="recap">
       <h2>Récapitulatif du mois — <span id="pl-recapMonth"></span></h2>
       <p class="hint">Total d'heures cumulées sur le mois. Le niveau de chaque fiole est relatif à l'équipier le plus présent.</p>
@@ -577,7 +596,41 @@ const Planning=(function(){
   let weekStart=mondayOf(new Date());
   let filterEmp='all';
 
-  function render(){renderToolbar();renderGrid();renderRecap();setEditing(document.body.classList.contains('editing'));}
+  function render(){renderToolbar();renderGrid();renderMobile();renderRecap();setEditing(document.body.classList.contains('editing'));}
+
+  function renderMobile(){
+    const wrap=document.getElementById('pl-grid-mobile');
+    if(!wrap)return;
+    const todayISO=isoDate(new Date());
+    const employees=Data.config.employees.filter(e=>filterEmp==='all'||e.id===filterEmp);
+    const days=Array.from({length:7},(_,i)=>addDays(weekStart,i));
+    let html='';
+    days.forEach((d,i)=>{
+      const iso=isoDate(d);const today=iso===todayISO;
+      html+=`<div class="daycard ${i>=5?'weekend':''}">
+        <div class="daycard-head ${today?'today':''}"><span class="dn">${FR_DAYS[i]}</span><span class="dd">${d.getDate()} ${FR_MONTHS[d.getMonth()]}</span></div>`;
+      employees.forEach(emp=>{
+        const key=`${emp.id}|${iso}`;
+        const abs=Data.absences[key]||'';
+        if(abs){
+          const ac=Data.codeByCode(abs);
+          const st=ac?`background:${ac.bg};color:${ac.fg};border-color:${ac.br}`:'';
+          html+=`<div class="emprow"><span class="en">${escapeHtml(emp.name)}</span><span class="eabs" style="${st}">${escapeHtml(abs)}${ac?' · '+escapeHtml(ac.label):''}</span></div>`;
+          return;
+        }
+        const e=Data.planning[key]||{};const wMin=dayMinutes(e);const brk=breakMinutesFor(wMin);const counted=wMin+brk;
+        const role=Data.roleByName(e.role);
+        const roleChip=role?`<span class="role-chip" style="background:${role.bg};color:${role.fg};border-color:${role.br}">${escapeHtml(role.name)}</span>`:'';
+        const seg=[];
+        if(e.s1s||e.s1e)seg.push(`${e.s1s||'?'}–${e.s1e||'?'}`);
+        if(e.s2s||e.s2e)seg.push(`${e.s2s||'?'}–${e.s2e||'?'}`);
+        const times=seg.length?`<span class="etimes">${seg.join(' · ')}${brk?` (+${brk} min pause)`:''}</span>`:'';
+        html+=`<div class="emprow"><span class="en">${escapeHtml(emp.name)}</span>${roleChip}${times}<span class="eh ${counted?'':'zero'}">${fmtHM(counted,true)}</span></div>`;
+      });
+      html+=`</div>`;
+    });
+    wrap.innerHTML=html;
+  }
 
   function renderToolbar(){
     const sel=document.getElementById('pl-filter');
@@ -655,7 +708,7 @@ const Planning=(function(){
           const entry=Data.planning[key]||{};entry[input.dataset.f]=input.value;
           if(!entry.role&&!entry.s1s&&!entry.s1e&&!entry.s2s&&!entry.s2e){delete Data.planning[key];}
           else{Data.planning[key]=entry;}
-          Data.savePlanning();renderGrid();renderRecap();setEditing(true);
+          Data.savePlanning();renderGrid();renderMobile();renderRecap();setEditing(true);
         });
       });
     });
