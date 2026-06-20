@@ -119,16 +119,17 @@ body.editing .toggle-edit .dot{background:#8bbf86;}
 .emprow .eh{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:800;font-size:.92rem;color:var(--ink);}
 .emprow .eh.zero{color:var(--ink-faint);font-weight:600;}
 /* tableau heures par equipier */
-.hours-table{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
-.hours-table .hrow{display:grid;grid-template-columns:minmax(110px,1fr) 1.6fr auto;gap:14px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--line-soft);}
+.hours-table{min-width:600px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+.hours-table .hrow{display:grid;grid-template-columns:minmax(96px,1fr) 74px minmax(130px,1.3fr) 92px 96px;gap:12px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--line-soft);}
 .hours-table .hrow:last-child{border-bottom:none;}
-.hours-table .hhead{background:var(--vellum-2);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:800;}
+.hours-table .hhead{background:var(--vellum-2);font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:800;}
 .hours-table .hn{font-family:var(--font-display);font-size:1.12rem;color:var(--ink);}
+.hours-table .hc{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink-soft);}
 .hours-table .hbar{display:flex;align-items:center;gap:9px;}
 .hours-table .hbar i{display:block;height:10px;border-radius:999px;background:var(--gilt-soft);min-width:3px;}
 .hours-table .hbar b{font-variant-numeric:tabular-nums;font-weight:800;color:var(--ink);}
-.hours-table .havg{font-variant-numeric:tabular-nums;color:var(--ink-soft);font-weight:700;text-align:right;white-space:nowrap;}
-@media(max-width:640px){.hours-table .hrow{grid-template-columns:1fr auto;gap:8px;}.hours-table .hbar{order:3;grid-column:1 / -1;}}
+.hours-table .he,.hours-table .hcum{font-variant-numeric:tabular-nums;font-weight:800;text-align:right;white-space:nowrap;}
+.ec-neg{color:#9a3b3b;}.ec-pos{color:#3f5436;}.ec-zero{color:var(--ink-faint);font-weight:700;}
 .day-cell{padding:8px 7px;display:flex;flex-direction:column;gap:6px;min-height:118px;}
 .day-cell.is-weekend{background:rgba(221,211,194,.18);}
 .day-cell.absent{justify-content:center;align-items:center;gap:6px;background:rgba(221,211,194,.30);}
@@ -277,9 +278,9 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
     <div class="scroll-x pl-desktop"><div class="grid" id="pl-grid"></div></div>
     <div class="pl-mobile" id="pl-grid-mobile"></div>
     <section class="recap" id="pl-hours-wrap">
-      <h2>Heures par équipier</h2>
-      <p class="hint">Total de la semaine affichée, et moyenne hebdomadaire sur le mois (utile pour calibrer les contrats).</p>
-      <div class="hours-table" id="pl-hours"></div>
+      <h2>Suivi des heures par équipier</h2>
+      <p class="hint">Contrat hebdo, heures réellement faites cette semaine, écart, et cumul depuis le début du mois (négatif = heures à rattraper). Définis les heures de contrat dans « Équipe &amp; postes ».</p>
+      <div class="scroll-x"><div class="hours-table" id="pl-hours"></div></div>
     </section>
     <section class="recap">
       <h2>Récapitulatif du mois — <span id="pl-recapMonth"></span></h2>
@@ -540,6 +541,7 @@ function buildSettings(dlg){
   const empRows=c.employees.map((e,i)=>`
     <div class="row-item" data-emp="${i}">
       <input type="text" value="${escapeHtml(e.name)}" data-field="name" aria-label="Nom de l'équipier">
+      <input type="number" value="${typeof e.contract==='number'?e.contract:''}" data-field="contract" min="0" max="60" step="0.5" placeholder="h/sem" style="max-width:78px" title="Heures de contrat par semaine" aria-label="Heures contrat par semaine">
       <button class="ghost icon" data-del-emp="${i}" title="Retirer">✕</button>
     </div>`).join('');
   const roleRows=c.roles.map((r,i)=>`
@@ -574,8 +576,10 @@ function buildSettings(dlg){
     <p class="hint" style="margin:2px 0 0">La clé reste sur <b>cet appareil</b> uniquement (jamais publiée). Génère-la sur GitHub → Settings → Developer settings → Personal access tokens, avec le droit « Contents : write » sur ce dépôt.</p>`;
   const save=()=>{Data.saveConfig();RERENDER();};
   body.querySelectorAll('[data-emp] input').forEach(inp=>inp.addEventListener('change',e=>{
-    const i=+e.target.closest('[data-emp]').dataset.emp;
-    c.employees[i].name=e.target.value.trim()||c.employees[i].name;save();}));
+    const i=+e.target.closest('[data-emp]').dataset.emp;const f=e.target.dataset.field;
+    if(f==='contract'){const v=e.target.value.trim().replace(',','.');c.employees[i].contract=v===''?undefined:Math.max(0,parseFloat(v)||0);}
+    else{c.employees[i].name=e.target.value.trim()||c.employees[i].name;}
+    save();}));
   body.querySelectorAll('[data-role] input').forEach(inp=>inp.addEventListener('change',e=>{
     const i=+e.target.closest('[data-role]').dataset.role;
     c.roles[i].name=e.target.value.trim()||c.roles[i].name;save();}));
@@ -617,21 +621,30 @@ const Planning=(function(){
     const wrap=document.getElementById('pl-hours');
     if(!wrap)return;
     const ref=addDays(weekStart,3);const y=ref.getFullYear(),m=ref.getMonth();
-    const first=new Date(y,m,1),last=new Date(y,m,daysInMonth(y,m));
-    const dim=daysInMonth(y,m);
+    const monthStartWeek=mondayOf(new Date(y,m,1));
     const rows=Data.config.employees.map(emp=>{
       const wk=totalMinutesForRange(emp.id,weekStart,addDays(weekStart,6));
-      const mon=totalMinutesForRange(emp.id,first,last);
-      const avg=Math.round(mon*7/dim);
-      return {emp,wk,avg};
+      const hasC=typeof emp.contract==='number'&&emp.contract>0;
+      const cMin=hasC?Math.round(emp.contract*60):0;
+      let cumul=null;
+      if(hasC){
+        cumul=0;let cur=new Date(monthStartWeek);let guard=0;
+        while(cur<=weekStart&&guard<60){cumul+=totalMinutesForRange(emp.id,cur,addDays(cur,6))-cMin;cur=addDays(cur,7);guard++;}
+      }
+      return {emp,wk,hasC,cMin,ecart:hasC?wk-cMin:null,cumul};
     });
     const maxWk=Math.max(60,...rows.map(r=>r.wk));
-    let html=`<div class="hrow hhead"><span>Équipier</span><span>Cette semaine</span><span>Moy./sem. (mois)</span></div>`;
+    const sign=min=>{if(min===0)return '<span class="ec-zero">à jour</span>';const neg=min<0;return `<span class="${neg?'ec-neg':'ec-pos'}">${neg?'−':'+'}${fmtHM(Math.abs(min))}</span>`;};
+    let html=`<div class="hrow hhead"><span>Équipier</span><span>Contrat</span><span>Cette semaine</span><span>Écart</span><span>Cumul mois</span></div>`;
     rows.forEach(r=>{
       const pct=Math.round((r.wk/maxWk)*100);
-      html+=`<div class="hrow"><span class="hn">${escapeHtml(r.emp.name)}</span>`+
+      html+=`<div class="hrow">`+
+        `<span class="hn">${escapeHtml(r.emp.name)}</span>`+
+        `<span class="hc">${r.hasC?fmtHM(r.cMin):'—'}</span>`+
         `<span class="hbar"><i style="width:${pct}%"></i><b>${fmtHM(r.wk)}</b></span>`+
-        `<span class="havg">${fmtHM(r.avg)}</span></div>`;
+        `<span class="he">${r.hasC?sign(r.ecart):'—'}</span>`+
+        `<span class="hcum">${r.hasC?sign(r.cumul):'—'}</span>`+
+        `</div>`;
     });
     wrap.innerHTML=html;
   }
