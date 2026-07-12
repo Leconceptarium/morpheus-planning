@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Morpheus Experience — Officine du temps</title>
+<title>Morpheus Experience — Planning</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   Morpheus Experience — Officine du temps
+   Morpheus Experience — Planning
    Ambiance : apothicaire onirique. Palette pastel, sobre.
    ============================================================ */
 :root{
@@ -36,7 +36,6 @@ body{
 .crest{width:42px;height:42px;flex:0 0 42px;color:var(--gilt);}
 .brand{display:flex;flex-direction:column;line-height:1.1;}
 .brand .name{font-family:var(--font-display);font-weight:600;font-size:1.55rem;letter-spacing:.01em;color:var(--ink);}
-.brand .tagline{font-size:.72rem;text-transform:uppercase;letter-spacing:.28em;color:var(--gilt);margin-top:2px;}
 .nav{margin-left:auto;display:flex;gap:6px;}
 .nav button{
   font-family:var(--font-body);color:var(--ink-soft);font-weight:700;font-size:.82rem;
@@ -61,6 +60,8 @@ body{
 .toolbar .group{display:flex;align-items:center;gap:8px;}
 .toolbar label{font-size:.78rem;color:var(--ink-soft);font-weight:700;letter-spacing:.03em;}
 .period-label{font-family:var(--font-display);font-size:1.25rem;color:var(--ink);min-width:230px;text-align:center;}
+/* éléments réservés à l'éditeur : invisibles pour les salariés */
+body:not(.editing) .admin-only{display:none !important;}
 /* boutons & champs */
 button,.btn{font-family:var(--font-body);font-size:.82rem;font-weight:700;letter-spacing:.02em;color:var(--ink);background:var(--vellum-2);border:1px solid var(--line);border-radius:8px;padding:8px 13px;cursor:pointer;transition:background .15s,border-color .15s,transform .05s;}
 button:hover,.btn:hover{background:#fff;border-color:var(--gilt-soft);}
@@ -183,9 +184,6 @@ body:not(.editing) .role-select:not(.has-role){display:none;}
 .abs-tot{display:flex;align-items:center;justify-content:center;background:var(--vellum-2);font-weight:800;font-size:.9rem;color:var(--ink);font-variant-numeric:tabular-nums;}
 .abs-tot.zero{color:var(--ink-faint);font-weight:600;}
 body:not(.editing) .abs-cell select{pointer-events:none;}
-/* note */
-.note{background:var(--panel);border:1px dashed var(--line);border-radius:var(--radius);padding:14px 18px;margin-top:26px;color:var(--ink-soft);font-size:.86rem;}
-.note b{color:var(--ink);}
 /* réglages */
 dialog.sheet{border:1px solid var(--line);border-radius:14px;padding:0;max-width:520px;width:calc(100% - 32px);background:var(--vellum);color:var(--ink);box-shadow:0 20px 60px rgba(59,50,71,.28);}
 dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
@@ -194,6 +192,7 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
 .sheet-body{padding:18px 20px;max-height:70vh;overflow:auto;}
 .sheet-body h4{font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--gilt);margin:18px 0 8px;}
 .sheet-body h4:first-child{margin-top:0;}
+.sheet-body .hint{color:var(--ink-soft);font-size:.8rem;}
 .row-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .row-item input[type="text"]{flex:1;}
 .row-item .swatch{width:18px;height:18px;border-radius:5px;border:1px solid var(--line);flex:0 0 18px;}
@@ -212,7 +211,7 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
   .pl-mobile{display:block;}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none !important;}}
-@media print{body{background:#fff;}.masthead .nav,.toolbar,.note,.toggle-edit,button{display:none !important;}.scroll-x{overflow:visible;}.grid,.abs-grid{box-shadow:none;min-width:0;}.page{padding:0;}}
+@media print{body{background:#fff;}.masthead .nav,.toolbar,.toggle-edit,button{display:none !important;}.scroll-x{overflow:visible;}.grid,.abs-grid{box-shadow:none;min-width:0;}.page{padding:0;}}
 </style>
 </head>
 <body>
@@ -228,7 +227,6 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
     </svg>
     <div class="brand">
       <span class="name">Morpheus Experience</span>
-      <span class="tagline">Officine du temps</span>
     </div>
     <nav class="nav">
       <button data-view="planning" class="active">Planning</button>
@@ -244,7 +242,7 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
     <div class="page-head">
       <div>
         <h1 class="page-title">Planning de travail</h1>
-        <p class="page-sub">Les heures se calculent toutes seules — pause légale de 20 min incluse dès que la journée dépasse 6h. Choisis le poste, renseigne les créneaux.</p>
+        <p class="page-sub">Les heures se calculent toutes seules — pause légale de 20 min incluse dès que la journée dépasse 6h.</p>
       </div>
       <div class="toggle-edit" title="Passer en édition pour modifier">
         <button id="editToggle" class="ghost icon" aria-label="Basculer édition">✎</button>
@@ -267,19 +265,19 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
         <input type="date" id="pl-picker">
       </div>
       <div class="spacer"></div>
-      <button id="pl-copyprev" class="ghost" title="Recopier le planning de la semaine précédente sur cette semaine">↺ Copier la semaine précédente</button>
+      <button id="pl-copyprev" class="ghost admin-only" title="Recopier le planning de la semaine précédente sur cette semaine">↺ Copier la semaine précédente</button>
       <button id="pl-print" class="ghost" title="Imprimer / PDF">Imprimer</button>
       <div class="group">
         <label for="pl-filter">Afficher</label>
         <select id="pl-filter"></select>
       </div>
-      <button id="pl-settings" class="ghost">Équipe &amp; postes</button>
+      <button id="pl-settings" class="ghost admin-only">Équipe &amp; postes</button>
     </div>
     <div class="scroll-x pl-desktop"><div class="grid" id="pl-grid"></div></div>
     <div class="pl-mobile" id="pl-grid-mobile"></div>
-    <section class="recap" id="pl-hours-wrap">
+    <section class="recap admin-only" id="pl-hours-wrap">
       <h2>Suivi des heures par équipier</h2>
-      <p class="hint">Contrat hebdo, heures faites cette semaine, écart, et cumul depuis le début du mois (négatif = heures à rattraper). Le suivi démarre à la date d'embauche, et la semaine d'arrivée est comptée au prorata. Tout se règle dans « Équipe &amp; postes ».</p>
+      <p class="hint">Contrat hebdo, heures faites cette semaine, écart, et cumul depuis le début du mois (négatif = heures à rattraper). Le suivi démarre à la date d'embauche, et la semaine d'arrivée est comptée au prorata.</p>
       <div class="scroll-x"><div class="hours-table" id="pl-hours"></div></div>
     </section>
     <section class="recap">
@@ -294,7 +292,7 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
     <div class="page-head">
       <div>
         <h1 class="page-title">Registre des absences</h1>
-        <p class="page-sub">Congés, repos et maladies, mois par mois. Choisis un code dans chaque case.</p>
+        <p class="page-sub">Congés, repos et maladies, mois par mois.</p>
       </div>
       <div class="toggle-edit" title="Passer en édition pour modifier">
         <button id="editToggle2" class="ghost icon" aria-label="Basculer édition">✎</button>
@@ -318,31 +316,25 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
       </div>
       <div class="spacer"></div>
       <button id="ab-print" class="ghost" title="Imprimer / PDF">Imprimer</button>
-      <button id="ab-settings" class="ghost">Équipe &amp; codes</button>
+      <button id="ab-settings" class="ghost admin-only">Équipe &amp; codes</button>
     </div>
     <div class="legend" id="ab-legend" style="margin-bottom:18px"></div>
     <div class="scroll-x"><div class="abs-grid" id="ab-grid"></div></div>
-    <section class="recap" id="ab-counters-wrap" style="margin-top:30px">
+    <section class="recap admin-only" id="ab-counters-wrap" style="margin-top:30px">
       <h2>Compteurs de l'année — <span id="ab-counterYear"></span></h2>
       <p class="hint">Total de jours posés par équipier et par code, sur l'année affichée.</p>
       <div class="scroll-x"><div id="ab-counters"></div></div>
     </section>
   </section>
 
-  <!-- ===================== PUBLICATION (partagé) ===================== -->
-  <div class="toolbar" style="margin-top:26px">
+  <!-- ===================== PUBLICATION (éditeur uniquement) ===================== -->
+  <div class="toolbar admin-only" style="margin-top:26px">
     <span style="font-size:.8rem;color:var(--ink-soft);font-weight:700">Publication&nbsp;:</span>
     <button id="publishBtn" class="primary" title="Envoie le planning en ligne pour toute l'équipe, en un clic">⬆ Publier en ligne</button>
     <button id="exportBtn" class="ghost">Exporter le fichier</button>
     <button id="importBtn" class="ghost">Importer un fichier</button>
     <button id="loadPublishedBtn" class="ghost">Recharger le planning publié</button>
     <input type="file" id="importInput" accept="application/json" hidden>
-  </div>
-  <div class="note">
-    <b>Comment ça marche.</b> « <b>Publier en ligne</b> » envoie ton planning à tout le monde
-    en un clic (à configurer une fois dans <b>Réglages</b> avec ta clé GitHub). Sinon, méthode
-    manuelle : « Exporter le fichier », puis dépose le <code>planning-data.json</code> sur GitHub.
-    Les équipiers ouvrent le lien et voient toujours ta dernière version automatiquement.
   </div>
 </main>
 
@@ -360,6 +352,7 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
    Aucune notion d'argent.
    ============================================================ */
 const STORE={config:'morpheus_config_v1',planning:'morpheus_planning_v1',absences:'morpheus_absences_v1',pubts:'morpheus_pubts_v1',ghtoken:'morpheus_ghtoken_v1'};
+const DEFAULT_PIN='1309';
 const PASTELS=[
   {bg:'#E7DCF1',fg:'#4A3A63',br:'#CDBBE4'},
   {bg:'#DEEBD7',fg:'#3F5436',br:'#BFD6B2'},
@@ -371,7 +364,7 @@ const PASTELS=[
 ];
 const DEFAULT_CONFIG={
   team:'Morpheus Experience',
-  editPin:'',
+  editPin:DEFAULT_PIN,
   github:{owner:'leconceptarium',repo:'morpheus-planning',branch:'main',path:'planning-data.json'},
   employees:[
     {id:'maxence',name:'Maxence T'},
@@ -417,7 +410,7 @@ const Data={
       if(!this.config.roles.some(r=>r.name==='Créa-maintenance')){this.config.roles.push({name:'Créa-maintenance',...PASTELS[6]});this.saveConfig();}
     }
     if(this.config&&!this.config.github){this.config.github={owner:'leconceptarium',repo:'morpheus-planning',branch:'main',path:'planning-data.json'};this.saveConfig();}
-    if(this.config&&typeof this.config.editPin!=='string'){this.config.editPin='';this.saveConfig();}
+    if(this.config&&!(typeof this.config.editPin==='string'&&this.config.editPin.trim())){this.config.editPin=DEFAULT_PIN;this.saveConfig();}
   },
   ghToken(){return lsGet(STORE.ghtoken,'')||'';},
   setGhToken(t){lsSet(STORE.ghtoken,t||'');},
@@ -428,7 +421,6 @@ const Data={
     const path=g.path||'planning-data.json';const branch=g.branch||'main';
     const api=`https://api.github.com/repos/${g.owner}/${g.repo}/contents/${path}`;
     const headers={'Authorization':`Bearer ${token}`,'Accept':'application/vnd.github+json'};
-    // récupère le sha existant si le fichier est déjà là
     let sha=undefined;
     try{const r=await fetch(`${api}?ref=${encodeURIComponent(branch)}`,{headers});if(r.ok){const j=await r.json();sha=j.sha;}}catch(e){}
     const bundle=this.exportBundle();
@@ -445,9 +437,6 @@ const Data={
   savePlanning(){lsSet(STORE.planning,this.planning);},
   saveAbsences(){lsSet(STORE.absences,this.absences);},
   async syncFromPublished(){
-    // Récupère le planning publié et l'applique s'il est plus récent que ce que
-    // l'appareil connaît déjà. Les visiteurs voient ainsi toujours la dernière
-    // version publiée, sans écraser des modifs locales non encore publiées.
     let json;
     try{
       const res=await fetch('./planning-data.json',{cache:'no-store'});
@@ -476,6 +465,7 @@ const Data={
     if(json.config){this.config=json.config;}
     if(json.planning){this.planning=json.planning;}
     if(json.absences){this.absences=json.absences;}
+    this.ensureDefaults();
     this.saveConfig();this.savePlanning();this.saveAbsences();
   },
   exportBundle(){
@@ -503,8 +493,6 @@ function workedDayMinutes(empId,iso){const key=`${empId}|${iso}`;if(Data.absence
 function breakMinutesFor(workedMin){return workedMin>BREAK_BLOCK?BREAK_MIN*Math.floor(workedMin/BREAK_BLOCK):0;}
 function totalMinutesForRange(empId,fromDate,toDate){let total=0;let d=new Date(fromDate);while(d<=toDate){total+=workedDayMinutes(empId,isoDate(d));d=addDays(d,1);}return total;}
 function contractMinForWeek(emp,weekMon){
-  // Minutes contractuelles dues sur la semaine donnée, en tenant compte de la date d'embauche.
-  // null = pas de contrat ; 0 = semaine entièrement avant l'embauche ; sinon prorata des jours couverts.
   if(!(typeof emp.contract==='number'&&emp.contract>0))return null;
   const weekly=Math.round(emp.contract*60);
   if(!emp.start)return weekly;
@@ -579,15 +567,15 @@ function buildSettings(dlg){
     <div class="add-row"><input type="text" id="newRole" placeholder="Nouveau poste…"><button id="addRole">Ajouter</button></div>
     <h4>Codes d'absence</h4><div id="codeList">${codeRows}</div>
     <div class="add-row"><input type="text" id="newCode" placeholder="Code" style="max-width:80px"><input type="text" id="newCodeLabel" placeholder="Libellé…"><button id="addCode">Ajouter</button></div>
-    <h4>Verrou éditeur (code)</h4>
-    <div class="row-item"><input type="text" id="editPin" value="${escapeHtml(c.editPin||'')}" placeholder="Aucun code (édition libre)" aria-label="Code éditeur"></div>
-    <p class="hint" style="margin:2px 0 0">Si un code est défini, il sera demandé pour passer en Édition. Laisse vide pour ne pas verrouiller. (Simple garde-fou contre les modifs accidentelles, pas un mot de passe sécurisé.)</p>
+    <h4>Code éditeur</h4>
+    <div class="row-item"><input type="text" id="editPin" value="${escapeHtml(c.editPin||'')}" aria-label="Code éditeur"></div>
+    <p class="hint" style="margin:2px 0 0">Demandé pour passer en Édition.</p>
     <h4>Publication automatique (GitHub)</h4>
-    <div class="row-item"><input type="text" id="ghOwner" value="${escapeHtml(g.owner||'')}" placeholder="Compte GitHub (ex. leconceptarium)"></div>
-    <div class="row-item"><input type="text" id="ghRepo" value="${escapeHtml(g.repo||'')}" placeholder="Dépôt (ex. morpheus-planning)"></div>
-    <div class="row-item"><input type="text" id="ghBranch" value="${escapeHtml(g.branch||'main')}" placeholder="Branche (main)" style="max-width:120px"><input type="text" id="ghPath" value="${escapeHtml(g.path||'planning-data.json')}" placeholder="planning-data.json"></div>
+    <div class="row-item"><input type="text" id="ghOwner" value="${escapeHtml(g.owner||'')}" placeholder="Compte GitHub"></div>
+    <div class="row-item"><input type="text" id="ghRepo" value="${escapeHtml(g.repo||'')}" placeholder="Dépôt"></div>
+    <div class="row-item"><input type="text" id="ghBranch" value="${escapeHtml(g.branch||'main')}" placeholder="Branche" style="max-width:120px"><input type="text" id="ghPath" value="${escapeHtml(g.path||'planning-data.json')}" placeholder="planning-data.json"></div>
     <div class="row-item"><input type="password" id="ghToken" value="${escapeHtml(Data.ghToken())}" placeholder="Clé d'accès GitHub (token)" autocomplete="off"></div>
-    <p class="hint" style="margin:2px 0 0">La clé reste sur <b>cet appareil</b> uniquement (jamais publiée). Génère-la sur GitHub → Settings → Developer settings → Personal access tokens, avec le droit « Contents : write » sur ce dépôt.</p>`;
+    <p class="hint" style="margin:2px 0 0">La clé reste sur <b>cet appareil</b> uniquement, elle n'est jamais publiée.</p>`;
   const save=()=>{Data.saveConfig();RERENDER();};
   body.querySelectorAll('[data-emp] input').forEach(inp=>inp.addEventListener('change',e=>{
     const i=+e.target.closest('[data-emp]').dataset.emp;const f=e.target.dataset.field;
@@ -612,7 +600,7 @@ function buildSettings(dlg){
   body.querySelector('#addCode').addEventListener('click',()=>{const code=body.querySelector('#newCode').value.trim().toUpperCase();
     const label=body.querySelector('#newCodeLabel').value.trim();if(!code)return;
     c.codes.push({code,label:label||code,...Data.nextPastel(c.codes.length)});save();buildSettings(dlg);});
-  body.querySelector('#editPin').addEventListener('change',e=>{c.editPin=e.target.value.trim();editUnlocked=true;save();});
+  body.querySelector('#editPin').addEventListener('change',e=>{const v=e.target.value.trim();c.editPin=v||DEFAULT_PIN;editUnlocked=true;save();});
   const gw=()=>{c.github=c.github||{};
     c.github.owner=body.querySelector('#ghOwner').value.trim();
     c.github.repo=body.querySelector('#ghRepo').value.trim();
@@ -624,7 +612,7 @@ function buildSettings(dlg){
 }
 
 /* ============================================================
-   MODULE PLANNING (cloisonné)
+   MODULE PLANNING
    ============================================================ */
 const Planning=(function(){
   let weekStart=mondayOf(new Date());
@@ -842,7 +830,7 @@ const Planning=(function(){
 })();
 
 /* ============================================================
-   MODULE ABSENCES (cloisonné)
+   MODULE ABSENCES
    ============================================================ */
 const Absences=(function(){
   let viewYear=new Date().getFullYear();
@@ -909,8 +897,7 @@ const Absences=(function(){
     if(head)head.textContent=viewYear;
     const codes=Data.config.codes;
     const prefixYear=String(viewYear)+'-';
-    // total par employé et par code sur l'année affichée
-    const totals={}; // empId -> {code -> n, _all}
+    const totals={};
     Data.config.employees.forEach(e=>{totals[e.id]={_all:0};codes.forEach(c=>totals[e.id][c.code]=0);});
     Object.keys(Data.absences).forEach(key=>{
       const sep=key.indexOf('|');if(sep<0)return;
@@ -945,7 +932,7 @@ const Absences=(function(){
 })();
 
 /* ============================================================
-   COORDINATION — onglets, édition, publication, démarrage
+   COORDINATION
    ============================================================ */
 function renderAll(){Planning.render();Absences.render();}
 
@@ -963,14 +950,11 @@ function switchView(name){
 
   RERENDER=renderAll;
 
-  // onglets
   document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));
 
-  // bascule édition (les deux boutons ✎)
   document.querySelectorAll('#editToggle,#editToggle2').forEach(btn=>
     btn.addEventListener('click',tryToggleEdit));
 
-  // publication en un clic vers GitHub
   document.getElementById('publishBtn').addEventListener('click',async()=>{
     const btn=document.getElementById('publishBtn');const old=btn.textContent;
     btn.disabled=true;btn.textContent='Publication…';
@@ -979,14 +963,12 @@ function switchView(name){
     finally{btn.disabled=false;btn.textContent=old;}
   });
 
-  // export
   document.getElementById('exportBtn').addEventListener('click',()=>{
     const blob=new Blob([JSON.stringify(Data.exportBundle(),null,2)],{type:'application/json'});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='planning-data.json';a.click();
     URL.revokeObjectURL(a.href);toast('Fichier planning-data.json téléchargé');
   });
 
-  // import
   const impInput=document.getElementById('importInput');
   document.getElementById('importBtn').addEventListener('click',()=>impInput.click());
   impInput.addEventListener('change',async()=>{
@@ -996,13 +978,11 @@ function switchView(name){
     impInput.value='';
   });
 
-  // recharger le publié
   document.getElementById('loadPublishedBtn').addEventListener('click',async()=>{
     try{await Data.loadPublished();renderAll();toast('Planning publié rechargé');}
     catch(e){toast('Aucun planning publié trouvé');}
   });
 
-  // réglages (deux boutons, un seul dialogue)
   const dlg=document.getElementById('settingsDialog');
   document.querySelectorAll('#pl-settings,#ab-settings').forEach(btn=>
     btn.addEventListener('click',()=>{buildSettings(dlg);dlg.showModal();}));
