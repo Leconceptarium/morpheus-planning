@@ -129,15 +129,17 @@ body.editing .toggle-edit .dot{background:#8bbf86;}
 .hours-table .hbar{display:flex;align-items:center;gap:9px;}
 .hours-table .hbar i{display:block;height:10px;border-radius:999px;background:var(--gilt-soft);min-width:3px;}
 .hours-table .hbar b{font-variant-numeric:tabular-nums;font-weight:800;color:var(--ink);}
-.hours-table .he,.hours-table .hcum{display:flex;justify-content:flex-end;}
-/* pastille solde d'heures : qui doit quoi à qui, sans ambiguïté */
-.bal{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;border:1px solid;white-space:nowrap;}
-.bal .bal-arrow{font-size:.78rem;line-height:1;}
-.bal .bal-amt{font-variant-numeric:tabular-nums;font-weight:800;font-size:.82rem;}
-.bal .bal-who{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.02em;opacity:.85;}
+.hours-table .he,.hours-table .hcum{display:flex;justify-content:flex-end;min-width:0;}
+.hours-table .he .bal,.hours-table .hcum .bal,.hours-table .he .bal-zero,.hours-table .hcum .bal-zero{width:100%;max-width:98px;}
+/* pastille solde d'heures : qui doit quoi à qui, sans ambiguïté — empilée sur 2 lignes pour ne
+   jamais déborder sur la colonne voisine, quelle que soit la largeur d'écran. */
+.bal{display:inline-flex;flex-direction:column;align-items:center;gap:1px;padding:4px 8px;border-radius:10px;border:1px solid;max-width:100%;box-sizing:border-box;}
+.bal .bal-amt{font-variant-numeric:tabular-nums;font-weight:800;font-size:.8rem;white-space:nowrap;line-height:1.2;}
+.bal .bal-arrow{font-size:.72rem;margin-right:1px;}
+.bal .bal-who{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0;opacity:.85;line-height:1.15;text-align:center;white-space:normal;word-break:break-word;}
 .bal-give{background:#DEEBD7;border-color:#BFD6B2;color:#3f5436;} /* vert : on leur doit des heures */
 .bal-owe{background:#F3DCDC;border-color:#E3B9B9;color:#8a2f2f;} /* rouge : ils nous doivent des heures */
-.bal-zero{display:inline-flex;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink-faint);font-weight:700;font-size:.78rem;}
+.bal-zero{display:inline-flex;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink-faint);font-weight:700;font-size:.78rem;white-space:nowrap;}
 .bal-legend{display:flex;flex-wrap:wrap;gap:14px;margin:2px 0 14px;font-size:.78rem;color:var(--ink-soft);}
 .bal-legend span{display:inline-flex;align-items:center;gap:6px;}
 .bal-legend .swatch{width:14px;height:14px;border-radius:4px;border:1px solid;}
@@ -538,7 +540,7 @@ function balanceBadge(min){
   const cls=owedToThem?'bal-give':'bal-owe';
   const arrow=owedToThem?'↑':'↓';
   const who=owedToThem?'on leur doit':'ils nous doivent';
-  return `<span class="bal ${cls}"><span class="bal-arrow">${arrow}</span><span class="bal-amt">${fmtHM(Math.abs(min))}</span><span class="bal-who">${who}</span></span>`;
+  return `<span class="bal ${cls}"><span class="bal-amt"><span class="bal-arrow">${arrow}</span>${fmtHM(Math.abs(min))}</span><span class="bal-who">${who}</span></span>`;
 }
 
 /* ============================================================
