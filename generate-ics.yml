@@ -1,0 +1,41 @@
+name: Régénérer les calendriers .ics
+
+# Se déclenche automatiquement dès que planning-data.json change sur main
+# (c'est-à-dire à chaque clic sur "Publier en ligne" dans l'appli),
+# et peut aussi être lancé manuellement depuis l'onglet Actions.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'planning-data.json'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build-ics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Générer les fichiers .ics
+        run: node generate-ics.mjs planning-data.json ics
+
+      - name: Publier les fichiers .ics mis à jour
+        run: |
+          git config user.name "morpheus-bot"
+          git config user.email "actions@github.com"
+          git add ics/
+          if git diff --cached --quiet; then
+            echo "Rien à publier, les .ics n'ont pas changé."
+          else
+            git commit -m "Mise à jour automatique des calendriers .ics"
+            git push
+          fi
