@@ -1,6 +1,6 @@
 {
   "_format": "morpheus-planning",
-  "_exportedAt": "2026-07-27T06:47:02.607Z",
+  "_exportedAt": "2026-07-31T16:01:27.661Z",
   "config": {
     "team": "Morpheus Experience",
     "employees": [
@@ -242,8 +242,8 @@
     },
     "yousra|2026-08-01": {
       "role": "Formation",
-      "s2s": "13:30",
-      "s2e": "22:30"
+      "s2s": "14:00",
+      "s2e": "21:30"
     },
     "yousra|2026-07-31": {
       "role": "Créa-maintenance",
@@ -254,8 +254,8 @@
     },
     "damien|2026-08-02": {
       "role": "Game master",
-      "s2e": "22:00",
-      "s2s": "15:30"
+      "s2e": "18:00",
+      "s2s": "09:30"
     },
     "damien|2026-07-28": {
       "role": "Repos"
@@ -263,7 +263,7 @@
     "damien|2026-08-01": {
       "role": "Formation",
       "s2s": "13:30",
-      "s2e": "23:30"
+      "s2e": "21:30"
     },
     "damien|2026-07-31": {
       "role": "Créa-maintenance",
@@ -288,8 +288,8 @@
     },
     "yousra|2026-08-02": {
       "role": "Bar",
-      "s2s": "09:30",
-      "s2e": "15:30"
+      "s2s": "10:00",
+      "s2e": "17:30"
     },
     "maxence|2026-08-02": {
       "role": "Bar/Escape",
