@@ -1,6 +1,6 @@
 {
   "_format": "morpheus-planning",
-  "_exportedAt": "2026-08-04T20:40:44.126Z",
+  "_exportedAt": "2026-08-04T21:09:18.852Z",
   "config": {
     "team": "Morpheus Experience",
     "employees": [
@@ -416,12 +416,14 @@
       "role": "Repos"
     },
     "johan|2026-08-13": {
-      "role": "Repos"
+      "role": "Créa-maintenance",
+      "s2s": "10:00",
+      "s2e": "19:00"
     },
     "damien|2026-08-13": {
       "role": "Créa-maintenance",
-      "s2s": "14:30",
-      "s2e": "20:00"
+      "s2s": "10:00",
+      "s2e": "18:00"
     },
     "johan|2026-08-14": {
       "role": "Créa-maintenance",
@@ -449,11 +451,11 @@
       "role": "Bar"
     },
     "yousra|2026-08-14": {
-      "role": "Formation",
+      "role": "Créa-maintenance",
       "s1s": "",
       "s1e": "",
-      "s2s": "15:00",
-      "s2e": "22:00"
+      "s2s": "16:00",
+      "s2e": "20:15"
     },
     "damien|2026-08-14": {
       "s2s": "13:30",
@@ -472,7 +474,7 @@
     },
     "damien|2026-08-16": {
       "role": "Bar/Escape",
-      "s2e": "22:00",
+      "s2e": "21:45",
       "s2s": "15:45"
     },
     "maxence|2026-08-16": {
@@ -519,7 +521,7 @@
     "damien|2026-08-21": {
       "role": "Game master",
       "s2s": "17:45",
-      "s2e": "23:45"
+      "s2e": "00:00"
     },
     "johan|2026-08-22": {
       "role": "Repos"
@@ -577,12 +579,12 @@
     "damien|2026-08-23": {
       "role": "Game master",
       "s2e": "22:00",
-      "s2s": "13:45"
+      "s2s": "13:00"
     },
     "maxence|2026-08-23": {
       "role": "Bar/Escape",
       "s1s": "09:30",
-      "s1e": "15:45"
+      "s1e": "15:30"
     },
     "damien|2026-08-20": {
       "role": "Repos"
@@ -620,7 +622,7 @@
     },
     "johan|2026-08-28": {
       "role": "Bar",
-      "s2s": "17:45",
+      "s2s": "18:45",
       "s2e": "00:00"
     },
     "johan|2026-08-27": {
@@ -644,12 +646,14 @@
       "s2e": "22:00"
     },
     "damien|2026-08-28": {
-      "role": "Game master",
+      "role": "Bar/Escape",
       "s2s": "09:30",
-      "s2e": "17:45"
+      "s2e": "18:45"
     },
     "damien|2026-08-29": {
-      "role": "Repos"
+      "role": "Bar/Escape",
+      "s2s": "09:30",
+      "s2e": "15:45"
     },
     "damien|2026-08-30": {
       "role": "Game master",
@@ -663,7 +667,7 @@
     },
     "maxence|2026-08-29": {
       "role": "Bar/Escape",
-      "s2s": "09:30",
+      "s2s": "15:45",
       "s2e": "00:00"
     },
     "yousra|2026-08-30": {
@@ -749,7 +753,9 @@
       "role": "Repos"
     },
     "maxence|2026-08-13": {
-      "role": "Repos"
+      "role": "Créa-maintenance",
+      "s2s": "10:00",
+      "s2e": "19:00"
     },
     "maxence|2026-08-12": {
       "role": "Repos"
