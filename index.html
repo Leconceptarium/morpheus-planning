@@ -290,7 +290,7 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
     <div class="pl-mobile" id="pl-grid-mobile"></div>
     <section class="recap admin-only" id="pl-hours-wrap">
       <h2>Suivi des heures par équipier</h2>
-      <p class="hint">Pour chaque équipier : ses heures cette semaine, et le solde total depuis son embauche (heures faites moins heures dues au contrat, mensualisées comme sur la fiche de paie). Une phrase suffit pour savoir qui doit quoi — pas besoin de calculer.</p>
+      <p class="hint">Pour chaque équipier : ses heures cette semaine, et le solde total depuis son embauche (heures faites moins heures dues au contrat, mensualisées comme sur la fiche de paie). Chiffres arrondis au multiple de 5 minutes le plus proche — 1 à 4 minutes d'écart, c'est du bruit de calcul, pas un vrai déséquilibre.</p>
       <div class="hour-cards" id="pl-hours"></div>
     </section>
     <section class="recap">
@@ -589,6 +589,9 @@ function balanceSentence(name,min){
   return `<span class="bal-pill bal-owe">${escapeHtml(name)} nous doit <b>${fmtHM(Math.abs(min))}</b>.</span>`;
 }
 function formatDateFr(d){return `${d.getDate()} ${FR_MONTHS[d.getMonth()]} ${d.getFullYear()}`;}
+/* Arrondit au multiple de 5 minutes le plus proche, pour l'affichage uniquement : 1 à 4 minutes
+   d'écart ne veulent rien dire (bruit d'arrondi de calcul), on ne les affiche jamais tels quels. */
+function roundToStep(min,step=5){if(min==null)return null;return Math.round(min/step)*step;}
 
 /* ============================================================
    COQUILLE — notifications, édition, réglages
@@ -764,8 +767,10 @@ const Planning=(function(){
           // heures dues au contrat (mensualisées, méthode des trentièmes comme la fiche de paie).
           // Comme ça part de la date d'embauche, ce solde inclut automatiquement tous les mois
           // précédents — pas besoin d'aller chercher le mois d'avant pour savoir où on en est.
+          // Affiché arrondi au multiple de 5 minutes : les 1-4 min d'écart ne sont que du bruit
+          // d'arrondi de calcul, pas un vrai déséquilibre à surveiller.
           const total=cumulativeBalanceMinutes(emp,weekSun);
-          balanceHtml=`<div class="hc-balance">${balanceSentence(emp.name,total)}</div>`;
+          balanceHtml=`<div class="hc-balance">${balanceSentence(emp.name,roundToStep(total))}</div>`;
         }else{
           balanceHtml=`<div class="hc-balance"><span class="hc-note">Renseigne sa date d'embauche (Réglages → Équipe) pour voir son solde.</span></div>`;
         }
@@ -778,7 +783,7 @@ const Planning=(function(){
         </div>
         <div class="hc-mid">
           <span class="hc-week-label">Cette semaine</span>
-          <span class="hc-week-val">${fmtHM(wk,true)}</span>
+          <span class="hc-week-val">${fmtHM(roundToStep(wk),true)}</span>
         </div>
         ${balanceHtml}
       </div>`;
