@@ -120,29 +120,24 @@ body.editing .toggle-edit .dot{background:#8bbf86;}
 .emprow .eh{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:800;font-size:.92rem;color:var(--ink);}
 .emprow .eh.zero{color:var(--ink-faint);font-weight:600;}
 /* tableau heures par equipier */
-.hours-table{min-width:720px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
-.hours-table .hrow{display:grid;grid-template-columns:minmax(96px,1fr) 74px minmax(130px,1.3fr) 110px 110px 120px;gap:12px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--line-soft);}
-.hours-table .hrow:last-child{border-bottom:none;}
-.hours-table .hhead{background:var(--vellum-2);font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:800;}
-.hours-table .hn{font-family:var(--font-display);font-size:1.12rem;color:var(--ink);}
-.hours-table .hc{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink-soft);}
-.hours-table .hbar{display:flex;align-items:center;gap:9px;}
-.hours-table .hbar i{display:block;height:10px;border-radius:999px;background:var(--gilt-soft);min-width:3px;}
-.hours-table .hbar b{font-variant-numeric:tabular-nums;font-weight:800;color:var(--ink);}
-.hours-table .he,.hours-table .hcum,.hours-table .htotal{display:flex;justify-content:flex-end;min-width:0;}
-.hours-table .he .bal,.hours-table .hcum .bal,.hours-table .htotal .bal,.hours-table .he .bal-zero,.hours-table .hcum .bal-zero,.hours-table .htotal .bal-zero{width:100%;max-width:98px;}
-/* pastille solde d'heures : qui doit quoi à qui, sans ambiguïté — empilée sur 2 lignes pour ne
-   jamais déborder sur la colonne voisine, quelle que soit la largeur d'écran. */
-.bal{display:inline-flex;flex-direction:column;align-items:center;gap:1px;padding:4px 8px;border-radius:10px;border:1px solid;max-width:100%;box-sizing:border-box;}
-.bal .bal-amt{font-variant-numeric:tabular-nums;font-weight:800;font-size:.8rem;white-space:nowrap;line-height:1.2;}
-.bal .bal-arrow{font-size:.72rem;margin-right:1px;}
-.bal .bal-who{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0;opacity:.85;line-height:1.15;text-align:center;white-space:normal;word-break:break-word;}
+/* Suivi des heures — une fiche par équipier, en phrases simples plutôt qu'un tableau à colonnes.
+   Le but : pouvoir lire "on doit 3h20 à Yousra" sans avoir à interpréter une flèche ou une couleur. */
+.hour-cards{display:flex;flex-direction:column;gap:12px;}
+.hour-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;}
+.hc-top{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px 14px;margin-bottom:10px;}
+.hc-who{font-family:var(--font-display);font-weight:600;font-size:1.3rem;color:var(--ink);}
+.hc-contract{font-size:.82rem;color:var(--ink-soft);}
+.hc-note{font-size:.82rem;color:var(--ink-faint);font-style:italic;}
+.hc-mid{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px dashed var(--line);}
+.hc-week-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:700;}
+.hc-week-val{font-family:var(--font-display);font-size:1.35rem;color:var(--ink);font-variant-numeric:tabular-nums;}
+/* pastille solde d'heures : une phrase complète et sans ambiguïté, la couleur ne fait que
+   renforcer ce que dit déjà le texte — jamais besoin de la décoder toute seule. */
+.bal-pill{display:inline-block;padding:9px 15px;border-radius:10px;border:1px solid;font-size:.92rem;line-height:1.4;}
+.bal-pill b{font-weight:800;font-variant-numeric:tabular-nums;}
 .bal-give{background:#DEEBD7;border-color:#BFD6B2;color:#3f5436;} /* vert : on leur doit des heures */
 .bal-owe{background:#F3DCDC;border-color:#E3B9B9;color:#8a2f2f;} /* rouge : ils nous doivent des heures */
-.bal-zero{display:inline-flex;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink-faint);font-weight:700;font-size:.78rem;white-space:nowrap;}
-.bal-legend{display:flex;flex-wrap:wrap;gap:14px;margin:2px 0 14px;font-size:.78rem;color:var(--ink-soft);}
-.bal-legend span{display:inline-flex;align-items:center;gap:6px;}
-.bal-legend .swatch{width:14px;height:14px;border-radius:4px;border:1px solid;}
+.bal-flat{background:var(--vellum-2);border-color:var(--line);color:var(--ink-soft);}
 .ec-neg{color:#9a3b3b;}.ec-pos{color:#3f5436;}.ec-zero{color:var(--ink-faint);font-weight:700;}
 .day-cell{padding:8px 7px;display:flex;flex-direction:column;gap:6px;min-height:118px;}
 .day-cell.is-weekend{background:rgba(221,211,194,.18);}
@@ -226,7 +221,6 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
   .name-cell .who{font-size:1rem;}
   .pl-desktop{display:none;}
   .pl-mobile{display:block;}
-  .hours-table .hrow{grid-template-columns:minmax(84px,1fr) 64px minmax(110px,1.1fr) 96px 96px 106px;gap:8px;}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none !important;}}
 @media print{body{background:#fff;}.masthead .nav,.toolbar,.toggle-edit,button{display:none !important;}.scroll-x{overflow:visible;}.grid,.abs-grid{box-shadow:none;min-width:0;}.page{padding:0;}}
@@ -296,12 +290,8 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
     <div class="pl-mobile" id="pl-grid-mobile"></div>
     <section class="recap admin-only" id="pl-hours-wrap">
       <h2>Suivi des heures par équipier</h2>
-      <p class="hint">Contrat mensualisé (heures/sem × 52 ÷ 12, comme la compta), heures faites cette semaine, écart, cumul du mois affiché, et solde cumulé depuis l'embauche (report automatique d'un mois sur l'autre). Le suivi démarre à la date d'embauche, et le mois d'arrivée est compté au prorata selon la méthode des trentièmes (base 30 jours fixe), comme sur la fiche de paie.</p>
-      <div class="bal-legend">
-        <span><i class="swatch" style="background:#DEEBD7;border-color:#BFD6B2"></i> Vert, flèche ↑ : ils ont fait plus que leur contrat → <b>on leur doit</b> des heures</span>
-        <span><i class="swatch" style="background:#F3DCDC;border-color:#E3B9B9"></i> Rouge, flèche ↓ : ils ont fait moins que leur contrat → <b>ils nous doivent</b> des heures</span>
-      </div>
-      <div class="scroll-x"><div class="hours-table" id="pl-hours"></div></div>
+      <p class="hint">Pour chaque équipier : ses heures cette semaine, et le solde total depuis son embauche (heures faites moins heures dues au contrat, mensualisées comme sur la fiche de paie). Une phrase suffit pour savoir qui doit quoi — pas besoin de calculer.</p>
+      <div class="hour-cards" id="pl-hours"></div>
     </section>
     <section class="recap">
       <h2>Récapitulatif du mois — <span id="pl-recapMonth"></span></h2>
@@ -591,16 +581,14 @@ function cumulativeBalanceMinutes(emp,uptoDate){
   const expected=expectedMinutesAcrossRange(emp,start,uptoDate);
   return worked-expected;
 }
-/* Pastille "qui doit quoi" : toujours le même code couleur + texte explicite, pour ne plus jamais
-   avoir à deviner ce que veut dire le rouge ou le vert. */
-function balanceBadge(min){
-  if(min===0)return `<span class="bal-zero">à jour</span>`;
-  const owedToThem=min>0;
-  const cls=owedToThem?'bal-give':'bal-owe';
-  const arrow=owedToThem?'↑':'↓';
-  const who=owedToThem?'on leur doit':'ils nous doivent';
-  return `<span class="bal ${cls}"><span class="bal-amt"><span class="bal-arrow">${arrow}</span>${fmtHM(Math.abs(min))}</span><span class="bal-who">${who}</span></span>`;
+/* Phrase de solde, sans aucune abréviation ni flèche à interpréter : on écrit littéralement
+   qui doit quoi à qui. La couleur ne fait que confirmer ce que dit déjà le texte. */
+function balanceSentence(name,min){
+  if(min===0)return `<span class="bal-pill bal-flat">${escapeHtml(name)} est à jour, aucune heure due dans un sens ou l'autre.</span>`;
+  if(min>0)return `<span class="bal-pill bal-give">On doit <b>${fmtHM(min)}</b> à ${escapeHtml(name)}.</span>`;
+  return `<span class="bal-pill bal-owe">${escapeHtml(name)} nous doit <b>${fmtHM(Math.abs(min))}</b>.</span>`;
 }
+function formatDateFr(d){return `${d.getDate()} ${FR_MONTHS[d.getMonth()]} ${d.getFullYear()}`;}
 
 /* ============================================================
    COQUILLE — notifications, édition, réglages
@@ -757,48 +745,45 @@ const Planning=(function(){
   function renderHoursRecap(){
     const wrap=document.getElementById('pl-hours');
     if(!wrap)return;
-    const ref=addDays(weekStart,3);const y=ref.getFullYear(),m=ref.getMonth();
-    const monthFirst=new Date(y,m,1);
-    const monthLast=new Date(y,m,daysInMonth(y,m));
     const weekSun=addDays(weekStart,6);
-    const rows=Data.config.employees.map(emp=>{
-      const wk=totalMinutesForRange(emp.id,weekStart,weekSun);
+    let html='';
+    Data.config.employees.forEach(emp=>{
       const hasC=typeof emp.contract==='number'&&emp.contract>0;
+      const wk=totalMinutesForRange(emp.id,weekStart,weekSun);
       const beforeHire=hasC&&emp.start&&weekSun<parseISO(emp.start);
-      const cWeek=(hasC&&!beforeHire)?contractMinForWeek(emp,weekStart):null;
-      let cumul=null;
-      if(hasC&&!beforeHire){
-        // Cumul du mois affiché : uniquement les jours du mois en cours, jusqu'à la fin de la
-        // semaine affichée (ou la fin du mois si la semaine affichée déborde sur le mois suivant).
-        // Le contrat attendu est mensualisé (heures/sem × 52 ÷ 12) puis reparti au jour près sur
-        // ce mois précis, donc aucune semaine à cheval n'est comptée deux fois, et rien n'est
-        // perdu en changeant de mois.
-        const clampEnd=weekSun<monthLast?weekSun:monthLast;
-        const worked=totalMinutesForRange(emp.id,monthFirst,clampEnd);
-        const expected=proratedContractMinutes(emp,monthFirst,clampEnd);
-        cumul=worked-expected;
+
+      let contractLine,balanceHtml='';
+      if(!hasC){
+        contractLine=`<span class="hc-note">Pas de contrat suivi pour cette personne.</span>`;
+      }else if(beforeHire){
+        contractLine=`<span class="hc-note">Pas encore embauché·e à cette date.</span>`;
+      }else{
+        contractLine=`<span class="hc-contract">Contrat : ${emp.contract} h / semaine${emp.start?` · depuis le ${formatDateFr(parseISO(emp.start))}`:''}</span>`;
+        if(emp.start){
+          // Solde depuis l'embauche jusqu'à la fin de la semaine affichée : heures faites moins
+          // heures dues au contrat (mensualisées, méthode des trentièmes comme la fiche de paie).
+          // Comme ça part de la date d'embauche, ce solde inclut automatiquement tous les mois
+          // précédents — pas besoin d'aller chercher le mois d'avant pour savoir où on en est.
+          const total=cumulativeBalanceMinutes(emp,weekSun);
+          balanceHtml=`<div class="hc-balance">${balanceSentence(emp.name,total)}</div>`;
+        }else{
+          balanceHtml=`<div class="hc-balance"><span class="hc-note">Renseigne sa date d'embauche (Réglages → Équipe) pour voir son solde.</span></div>`;
+        }
       }
-      // Solde cumulé depuis l'embauche jusqu'à la fin de la semaine affichée : c'est ce qui
-      // permet de voir, en changeant de mois, la dette ou le crédit d'heures des mois précédents
-      // qui se reporte automatiquement — plus besoin de garder le mois d'avant sous les yeux.
-      const total=(hasC&&emp.start)?cumulativeBalanceMinutes(emp,weekSun):null;
-      return {emp,wk,hasC,beforeHire,cWeek,ecart:(cWeek!=null)?wk-cWeek:null,cumul,total};
+
+      html+=`<div class="hour-card">
+        <div class="hc-top">
+          <span class="hc-who">${escapeHtml(emp.name)}</span>
+          ${contractLine}
+        </div>
+        <div class="hc-mid">
+          <span class="hc-week-label">Cette semaine</span>
+          <span class="hc-week-val">${fmtHM(wk,true)}</span>
+        </div>
+        ${balanceHtml}
+      </div>`;
     });
-    const maxWk=Math.max(60,...rows.map(r=>r.wk));
-    let html=`<div class="hrow hhead"><span>Équipier</span><span>Contrat</span><span>Cette semaine</span><span>Écart semaine</span><span>Cumul mois</span><span>Solde cumulé</span></div>`;
-    rows.forEach(r=>{
-      const pct=Math.round((r.wk/maxWk)*100);
-      const cTxt=r.beforeHire?'<span class="ec-zero">pas encore</span>':(r.cWeek!=null?fmtHM(r.cWeek):'—');
-      html+=`<div class="hrow">`+
-        `<span class="hn">${escapeHtml(r.emp.name)}</span>`+
-        `<span class="hc">${cTxt}</span>`+
-        `<span class="hbar"><i style="width:${pct}%"></i><b>${fmtHM(r.wk)}</b></span>`+
-        `<span class="he">${r.ecart!=null?balanceBadge(r.ecart):'—'}</span>`+
-        `<span class="hcum">${r.cumul!=null?balanceBadge(r.cumul):'—'}</span>`+
-        `<span class="htotal">${r.total!=null?balanceBadge(r.total):'—'}</span>`+
-        `</div>`;
-    });
-    wrap.innerHTML=html;
+    wrap.innerHTML=html||`<p class="hint">Ajoute des équipiers dans les Réglages pour voir leur suivi ici.</p>`;
   }
 
   function renderMobile(){
