@@ -296,7 +296,7 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
     <div class="pl-mobile" id="pl-grid-mobile"></div>
     <section class="recap admin-only" id="pl-hours-wrap">
       <h2>Suivi des heures par équipier</h2>
-      <p class="hint">Contrat mensualisé (heures/sem × 52 ÷ 12, comme la compta), heures faites cette semaine, écart, cumul du mois affiché, et solde cumulé depuis l'embauche (report automatique d'un mois sur l'autre). Le suivi démarre à la date d'embauche, et le mois d'arrivée est compté au prorata.</p>
+      <p class="hint">Contrat mensualisé (heures/sem × 52 ÷ 12, comme la compta), heures faites cette semaine, écart, cumul du mois affiché, et solde cumulé depuis l'embauche (report automatique d'un mois sur l'autre). Le suivi démarre à la date d'embauche, et le mois d'arrivée est compté au prorata selon la méthode des trentièmes (base 30 jours fixe), comme sur la fiche de paie.</p>
       <div class="bal-legend">
         <span><i class="swatch" style="background:#DEEBD7;border-color:#BFD6B2"></i> Vert, flèche ↑ : ils ont fait plus que leur contrat → <b>on leur doit</b> des heures</span>
         <span><i class="swatch" style="background:#F3DCDC;border-color:#E3B9B9"></i> Rouge, flèche ↓ : ils ont fait moins que leur contrat → <b>ils nous doivent</b> des heures</span>
@@ -541,19 +541,23 @@ function monthlyContractMinutes(emp){
   if(!(typeof emp.contract==='number'&&emp.contract>0))return 0;
   return Math.round(emp.contract*60*52/12);
 }
+/* Jour du mois plafonné à 30 : c'est la convention de la "méthode des trentièmes" utilisée par
+   les logiciels de paie français — chaque mois vaut toujours 30 jours pour le calcul du prorata,
+   peu importe qu'il en compte réellement 28, 30 ou 31 (le 31 ne rajoute rien de plus que le 30). */
+function trentiemeDay(d){return Math.min(d.getDate(),30);}
 /* Contrat attendu au prorata, pour une plage de jours à l'intérieur d'un même mois calendaire
-   (ex : du 1er au 30 août, ou du 12 au 31 pour un mois d'embauche). Le mois plein vaut toujours
-   le même nombre d'heures mensualisées (cf. monthlyContractMinutes), qu'on répartit ensuite au
-   jour près selon le nombre de jours réellement couverts sur le nombre de jours du mois. */
+   (ex : du 1er au 30 août, ou du 12 au 31 pour un mois d'embauche). Méthode des trentièmes,
+   comme sur la fiche de paie : le mois plein vaut toujours le même nombre d'heures mensualisées
+   (cf. monthlyContractMinutes), réparti sur 30 "trentièmes" — pas sur le nombre réel de jours du
+   mois. C'est ce qui fait matcher le prorata du mois d'embauche avec le bulletin de salaire. */
 function proratedContractMinutes(emp,fromDate,toDate){
   if(!(typeof emp.contract==='number'&&emp.contract>0))return 0;
   let start=new Date(fromDate);
   if(emp.start){const hire=parseISO(emp.start);if(hire>start)start=hire;}
   if(start>toDate)return 0;
   const monthlyMin=monthlyContractMinutes(emp);
-  const dInMonth=daysInMonth(fromDate.getFullYear(),fromDate.getMonth());
-  const days=Math.round((toDate-start)/86400000)+1;
-  return Math.round(monthlyMin*days/dInMonth);
+  const units=trentiemeDay(toDate)-trentiemeDay(start)+1;
+  return Math.round(monthlyMin*units/30);
 }
 /* Contrat attendu cumulé sur une plage qui peut couvrir PLUSIEURS mois (ex : de l'embauche
    jusqu'à aujourd'hui). On découpe la plage mois par mois et on applique la mensualisation
