@@ -1,6 +1,6 @@
 {
   "_format": "morpheus-planning",
-  "_exportedAt": "2026-08-04T21:09:18.852Z",
+  "_exportedAt": "2026-08-09T07:09:11.865Z",
   "config": {
     "team": "Morpheus Experience",
     "employees": [
@@ -443,7 +443,7 @@
     "yousra|2026-08-15": {
       "role": "Bar",
       "s1s": "15:00",
-      "s1e": "23:45"
+      "s1e": "22:45"
     },
     "yousra|2026-08-16": {
       "s1s": "09:30",
@@ -454,7 +454,7 @@
       "role": "Créa-maintenance",
       "s1s": "",
       "s1e": "",
-      "s2s": "16:00",
+      "s2s": "15:00",
       "s2e": "20:15"
     },
     "damien|2026-08-14": {
