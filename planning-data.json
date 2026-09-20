@@ -1,6 +1,6 @@
 {
   "_format": "morpheus-planning",
-  "_exportedAt": "2026-09-01T13:19:46.373Z",
+  "_exportedAt": "2026-09-20T14:43:51.477Z",
   "config": {
     "team": "Morpheus Experience",
     "employees": [
@@ -1185,6 +1185,109 @@
       "role": "Game master",
       "s1s": "09:30",
       "s1e": "15:00"
+    },
+    "johan|2026-09-29": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-09-30": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-09-29": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-09-30": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "damien|2026-09-29": {
+      "role": "Repos"
+    },
+    "yousra|2026-09-29": {
+      "role": "Repos"
+    },
+    "yousra|2026-09-30": {
+      "role": "Repos"
+    },
+    "damien|2026-09-30": {
+      "role": "Repos"
+    },
+    "maxence|2026-09-28": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "yousra|2026-09-28": {
+      "role": "Repos"
+    },
+    "damien|2026-09-28": {
+      "s1s": "13:30",
+      "s1e": "21:45",
+      "role": "Game master"
+    },
+    "yousra|2026-10-01": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "18:00"
+    },
+    "maxence|2026-10-01": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "damien|2026-10-01": {
+      "role": "Repos"
+    },
+    "damien|2026-10-02": {
+      "role": "Game master",
+      "s1e": "23:45",
+      "s1s": "15:30"
+    },
+    "damien|2026-10-03": {
+      "role": "Game master",
+      "s1s": "15:30",
+      "s1e": "23:45"
+    },
+    "damien|2026-10-04": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "yousra|2026-10-02": {
+      "role": "Bar",
+      "s1s": "10:00",
+      "s1e": "15:00"
+    },
+    "yousra|2026-10-03": {
+      "role": "Bar",
+      "s1s": "09:45",
+      "s1e": "15:00"
+    },
+    "yousra|2026-10-04": {
+      "role": "Bar",
+      "s1s": "09:45",
+      "s1e": "15:00"
+    },
+    "maxence|2026-10-02": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-10-03": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-10-04": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "22:00"
     }
   },
   "absences": {
@@ -1236,6 +1339,25 @@
     "johan|2026-09-22": "AB",
     "johan|2026-09-26": "AB",
     "johan|2026-09-27": "AB",
-    "johan|2026-09-29": "AB"
+    "johan|2026-09-28": "AB",
+    "johan|2026-10-01": "AB",
+    "johan|2026-10-02": "AB",
+    "johan|2026-10-03": "AB",
+    "johan|2026-10-04": "AB",
+    "johan|2026-10-05": "AB",
+    "johan|2026-10-09": "AB",
+    "johan|2026-10-10": "AB",
+    "johan|2026-10-11": "AB",
+    "johan|2026-10-12": "AB",
+    "johan|2026-10-16": "AB",
+    "johan|2026-10-17": "AB",
+    "johan|2026-10-18": "AB",
+    "johan|2026-10-23": "AB",
+    "johan|2026-10-24": "AB",
+    "johan|2026-10-19": "AB",
+    "johan|2026-10-25": "AB",
+    "johan|2026-10-26": "AB",
+    "johan|2026-10-27": "AB",
+    "johan|2026-09-19": "AB"
   }
 }
