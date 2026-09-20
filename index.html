@@ -295,8 +295,8 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
     <div class="scroll-x pl-desktop"><div class="grid" id="pl-grid"></div></div>
     <div class="pl-mobile" id="pl-grid-mobile"></div>
     <section class="recap admin-only" id="pl-hours-wrap">
-      <h2>Pour la comptable · heures en plus du mois</h2>
-      <p class="hint">Choisis le mois à transmettre. Le détail des semaines reste disponible sous chaque total.</p>
+      <h2>Pour la comptable · mois civil et dépassements</h2>
+      <p class="hint">Les heures du mois vont du 1er au dernier jour. Les dépassements restent contrôlés par semaine complète.</p>
       <div class="hour-cards" id="pl-hours"></div>
     </section>
     <section class="recap">
@@ -1159,12 +1159,18 @@ function monthPayroll(emp,month,today=isoDate(new Date())){
   if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(month))return [];
   const first=parseISO(month+'-01'),last=new Date(first.getFullYear(),first.getMonth()+1,0),rows=[];
   for(let monday=mondayOf(first);monday<=last;monday=addDays(monday,7)){
-    const r=weeklyPayroll(emp,monday,today);if(r&&r.month===month)rows.push(r);
+    const r=weeklyPayroll(emp,monday,today);if(r){r.crossMonth=r.week.slice(0,7)!==month||r.end.slice(0,7)!==month;rows.push(r);}
   }
   return rows;
 }
 function payrollTotals(rows){
-  return rows.reduce((a,r)=>{if(r.closed&&!r.warnings.length){a.extra+=r.extra;a.shortfall+=r.shortfall;a.weeks++;}else if(r.closed){a.unresolved++;}else a.upcoming++;return a;},{extra:0,shortfall:0,weeks:0,unresolved:0,upcoming:0});
+  return rows.reduce((a,r)=>{if(r.crossMonth){a.boundary++;return a;}if(r.closed&&!r.warnings.length){a.extra+=r.extra;a.shortfall+=r.shortfall;a.weeks++;}else if(r.closed){a.unresolved++;}else a.upcoming++;return a;},{extra:0,shortfall:0,weeks:0,unresolved:0,upcoming:0,boundary:0});
+}
+function calendarMonthPayroll(emp,month,today=isoDate(new Date())){
+  const first=parseISO(month+'-01'),last=new Date(first.getFullYear(),first.getMonth()+1,0);
+  let worked=0,past=0,credit=0;
+  for(let d=first;d<=last;d=addDays(d,1)){const date=isoDate(d),minutes=workedDayMinutes(emp.id,date);worked+=minutes;if(date<today)past+=minutes;credit+=creditFor(emp.id+'|'+date);}
+  return {first:isoDate(first),last:isoDate(last),worked,past,planned:worked-past,credit};
 }
 function payrollPeriod(r){return formatDateFr(parseISO(r.start))+' au '+formatDateFr(parseISO(r.end));}
 function weeklyGuide(record){
@@ -1189,18 +1195,20 @@ function renderReliableHours(){
   const date=document.getElementById('pl-picker').value,week=mondayOf(validISO(date)?parseISO(date):new Date());
   renderWeeklyGuide(week);
   const future=payrollMonth>isoDate(new Date()).slice(0,7);
-  let html=`<div class="toolbar"><label for="payrollMonth">Mois à transmettre</label><input type="month" id="payrollMonth" min="2026-09" value="${payrollMonth}"><button id="exportPayroll">Télécharger pour la comptable (CSV)</button></div><p class="hint">Les heures en plus sont calculées chaque semaine, puis additionnées pour le mois. Une semaine plus courte n’efface pas un dépassement.</p>`;
+  let html=`<div class="toolbar"><label for="payrollMonth">Mois civil</label><input type="month" id="payrollMonth" min="2026-09" value="${payrollMonth}"><button id="exportPayroll">Télécharger pour la comptable (CSV)</button></div><p class="hint">Le total du calendrier et les dépassements hebdomadaires sont deux informations différentes. Les semaines à cheval sur deux mois sont présentées à part, sans attribution automatique à une paie.</p>`;
   for(const emp of Data.config.employees.filter(e=>e.contract>0)){
-    const rows=monthPayroll(emp,payrollMonth),totals=payrollTotals(rows),forecast=rows.filter(r=>!r.warnings.length).reduce((sum,r)=>sum+r.extra,0),unchecked=rows.filter(r=>r.warnings.length).length;
+    const rows=monthPayroll(emp,payrollMonth),totals=payrollTotals(rows),calendar=calendarMonthPayroll(emp,payrollMonth),forecast=rows.filter(r=>!r.crossMonth&&!r.warnings.length).reduce((sum,r)=>sum+r.extra,0),unchecked=rows.filter(r=>!r.crossMonth&&r.warnings.length).length;
     const value=future?forecast:totals.extra;
-    html+=`<article class="hour-card accountant-card"><div class="hc-top"><span class="hc-who">${escapeHtml(emp.name)}</span><span>${escapeHtml(monthName(payrollMonth))}</span></div><p class="accountant-label">${future?'Heures en plus prévues — pas encore à transmettre':'Heures en plus à transmettre à la comptable'}</p><p class="accountant-total">${fmtHM(value)}${(!future&&totals.unresolved)||(future&&unchecked)?' <small>total incomplet</small>':''}</p><p class="hint">${future?'Estimation selon le planning saisi. À confirmer après les semaines travaillées.':totals.weeks+' semaine(s) terminée(s) sans alerte prises en compte.'}${totals.unresolved?' '+totals.unresolved+' semaine(s) terminée(s) à vérifier, exclue(s) de ce total.':''}</p>`;
-    if(!future&&totals.upcoming)html+=`<p class="month-forecast">Prévision pour tout le mois selon le planning saisi : <b>${fmtHM(forecast)}</b> en plus${unchecked?' · '+unchecked+' semaine(s) à vérifier':''}. ${totals.upcoming} semaine(s) en cours ou à venir restent à terminer.</p>`;
+    html+=`<article class="hour-card accountant-card"><div class="hc-top"><span class="hc-who">${escapeHtml(emp.name)}</span><span>${escapeHtml(monthName(payrollMonth))}</span></div><p class="accountant-label">Horaires saisis du ${formatDateFr(parseISO(calendar.first))} au ${formatDateFr(parseISO(calendar.last))}</p><p class="accountant-total">${fmtHM(calendar.worked)}</p><p class="hint">${fmtHM(calendar.past)} sur les jours passés · ${fmtHM(calendar.planned)} aujourd’hui ou à venir. Horaires saisis, non attestés comme réalisés. Crédits d’absence séparés : ${fmtHM(calendar.credit)}. Les journées non renseignées ne sont pas comptées.</p><p class="accountant-label">${future?'Dépassements prévus':'Dépassements des semaines terminées'} — semaines entièrement dans le mois</p><p class="accountant-total">${fmtHM(value)}${(!future&&totals.unresolved)||(future&&unchecked)?' <small>sous-total incomplet</small>':''}</p><p class="hint">${future?'Estimation à confirmer après réalisation.':totals.weeks+' semaine(s) terminée(s) sans alerte prises en compte.'} Ce sous-total n’est pas un total définitif à payer.${totals.unresolved?' '+totals.unresolved+' semaine(s) terminée(s) à vérifier, exclue(s).':''}</p>`;
+    if(!future&&totals.upcoming)html+=`<p class="month-forecast">Prévision des semaines entièrement dans le mois : <b>${fmtHM(forecast)}</b> en plus${unchecked?' · '+unchecked+' semaine(s) à vérifier':''}. ${totals.upcoming} semaine(s) en cours ou à venir.</p>`;
+    const boundary=rows.filter(r=>r.crossMonth);
+    if(boundary.length)html+=`<div class="audit-warning"><b>Semaines à cheval sur deux mois — hors sous-total</b>${boundary.map(r=>`<p>${escapeHtml(payrollPeriod(r))} : ${fmtHM(r.worked)} d’horaires sur la semaine entière, ${fmtHM(r.extra)} en plus${r.closed?'':' (prévisionnel)'}${r.warnings.length?' · données à vérifier':''}. Rattachement à confirmer avec la comptable.</p>`).join('')}<p>Une même semaine apparaît dans les deux mois concernés : ne pas la payer deux fois. Aucune répartition automatique des dépassements entre les mois.</p></div>`;
     if(future&&unchecked)html+=`<p class="audit-warning">${unchecked} semaine(s) à vérifier : prévision incomplète.</p>`;
     html+=`<details class="monthly-detail"><summary>Voir le détail des ${rows.length} semaines</summary><p class="hint">Écarts sous la référence sur les semaines terminées sans alerte : ${fmtHM(totals.shortfall)}, présentés séparément.</p><div class="scroll-x"><table class="payroll-table"><thead><tr><th>Semaine</th><th>Horaires</th><th>Crédits</th><th>Référence</th><th>En plus</th><th>En dessous</th><th>État</th></tr></thead><tbody>`;
-    for(const r of rows){html+=`<tr><td>${escapeHtml(payrollPeriod(r))}${r.partial?'<br><small>Début du suivi en cours de semaine : contrat hebdomadaire conservé</small>':''}${r.manualNote?'<br><small>'+escapeHtml(r.manualNote)+'</small>':''}<br><button data-weekref="${emp.id}|${r.week}" class="ghost">Ajuster la référence</button></td><td>${fmtHM(r.worked)}</td><td>${fmtHM(r.credit)}</td><td>${fmtHM(r.reference)}</td><td>${fmtHM(r.extra)}</td><td>${fmtHM(r.shortfall)}</td><td>${r.warnings.length?'<details><summary class="audit-warning">'+r.warnings.length+' point(s) à vérifier</summary>'+r.warnings.map(w=>'<p>'+escapeHtml(w)+'</p>').join('')+'</details>':r.closed?'À transmettre':'Prévisionnel'}${r.warnings.length&&!r.closed?'<br>Prévisionnel':''}</td></tr>`;}
+    for(const r of rows){html+=`<tr><td>${escapeHtml(payrollPeriod(r))}${r.crossMonth?'<br><b>À cheval sur deux mois — rattachement à confirmer</b>':''}${r.partial?'<br><small>Début du suivi en cours de semaine : contrat hebdomadaire conservé</small>':''}${r.manualNote?'<br><small>'+escapeHtml(r.manualNote)+'</small>':''}<br><button data-weekref="${emp.id}|${r.week}" class="ghost">Ajuster la référence</button></td><td>${fmtHM(r.worked)}</td><td>${fmtHM(r.credit)}</td><td>${fmtHM(r.reference)}</td><td>${fmtHM(r.extra)}</td><td>${fmtHM(r.shortfall)}</td><td>${r.warnings.length?'<details><summary class="audit-warning">'+r.warnings.length+' point(s) à vérifier</summary>'+r.warnings.map(w=>'<p>'+escapeHtml(w)+'</p>').join('')+'</details>':r.closed?'Terminée':'Prévisionnel'}${r.crossMonth?'<br>Hors sous-total':''}</td></tr>`;}
     html+=`</tbody></table></div>${rows.length?'':'<p>Aucune semaine dans ce mois après le début du suivi.</p>'}</details></article>`;
   }
-  html+='<details class="calculation-rules"><summary>Règles du récapitulatif</summary><p>Suivi depuis le 1er septembre 2026, avec un report antérieur de 0 h. Chaque mois est indépendant.</p><p>Une semaine va du lundi au dimanche et appartient au mois de son dimanche. Exemple : du 26 octobre au 1er novembre → novembre.</p><p>Le total à transmettre prend uniquement les semaines terminées avant aujourd’hui et sans alerte. Les taux, majorations et la qualification des heures sont à vérifier avec la comptable.</p></details>';
+  html+='<details class="calculation-rules"><summary>Règles du récapitulatif</summary><p>Suivi des dépassements depuis le 1er septembre 2026, report antérieur de 0 h. Horaires du mois civil du 1er au dernier jour, pauses payées incluses, affectés à la date de leur journée de planning.</p><p>Contrôle du lundi au dimanche : une semaine courte ne réduit pas les dépassements des autres semaines. Les semaines à cheval sur deux mois restent hors sous-total, sans prorata ni attribution automatique.</p><p>Les heures d’aujourd’hui et à venir sont prévisionnelles. Le sous-total terminé exclut les semaines avec alerte. La comptable doit valider le rattachement à la paie, les règles contractuelles, la qualification et les majorations.</p></details>';
   wrap.innerHTML=html;
   document.getElementById('payrollMonth').onchange=e=>{if(/^\d{4}-(0[1-9]|1[0-2])$/.test(e.target.value)&&e.target.value>='2026-09'){payrollMonth=e.target.value;renderReliableHours();}};
   document.getElementById('exportPayroll').onclick=exportPayroll;
@@ -1218,9 +1226,10 @@ function editWeeklyReference(key){
 function exportPayroll(){
   const rows=[['Mois','Équipier','Début suivi semaine','Fin semaine','Horaires (minutes)','Crédits absence (minutes)','Référence (minutes)','En plus (minutes)','En dessous (minutes)','État','Remarques']];
   for(const emp of Data.config.employees.filter(e=>e.contract>0)){
-    const weeks=monthPayroll(emp,payrollMonth),totals=payrollTotals(weeks);
-    for(const r of weeks)rows.push([payrollMonth,emp.name,r.start,r.end,r.worked,r.credit,r.reference,r.extra,r.shortfall,r.warnings.length?'À vérifier — hors total':r.closed?'À transmettre':'Prévisionnel — hors total',[...r.warnings,r.partial?'Début du suivi en cours de semaine : référence hebdomadaire conservée':'',r.manualNote].filter(Boolean).join(' / ')]);
-    rows.push([payrollMonth,emp.name,'TOTAL TERMINÉ SANS ALERTE','','','','',totals.extra,totals.shortfall,'Pas de compensation entre semaines','Report antérieur au 01/09/2026 : 0 minute. Aucun report entre mois.']);
+    const weeks=monthPayroll(emp,payrollMonth),totals=payrollTotals(weeks),calendar=calendarMonthPayroll(emp,payrollMonth);
+    rows.push([payrollMonth,emp.name,calendar.first,calendar.last,calendar.worked,calendar.credit,'','','','TOTAL CALENDRIER — horaires saisis',calendar.past+' minutes sur jours passés ; '+calendar.planned+' minutes aujourd’hui ou à venir. Pas un total de dépassements. Journées non renseignées non comptées.']);
+    for(const r of weeks)rows.push([payrollMonth,emp.name,r.week,r.end,r.worked,r.credit,r.reference,r.extra,r.shortfall,(r.crossMonth?'Rattachement à confirmer — hors sous-total / ':'')+(r.warnings.length?'À vérifier — hors sous-total':r.closed?'Terminée':'Prévisionnel — hors sous-total'),[r.crossMonth?'Semaine visible dans les deux mois : ne pas payer deux fois. Attribution à une paie à valider.':'',...r.warnings,r.partial?'Début du suivi en cours de semaine : référence hebdomadaire conservée':'',r.manualNote].filter(Boolean).join(' / ')]);
+    rows.push([payrollMonth,emp.name,'SOUS-TOTAL SEMAINES ENTIÈREMENT DANS LE MOIS','','','','',totals.extra,totals.shortfall,'Semaines terminées sans alerte uniquement — pas un total définitif à payer',totals.boundary+' semaine(s) à cheval exclue(s) ; '+totals.unresolved+' semaine(s) terminée(s) à vérifier ; '+totals.upcoming+' semaine(s) non terminée(s). Pas de compensation entre semaines. Report antérieur au 01/09/2026 : 0 minute.']);
   }
   const quote=value=>'"'+String(value).replace(/^[=+@-]/,"'$&").replace(/"/g,'""')+'"';
   const content='\uFEFF'+rows.map(row=>row.map(quote).join(';')).join('\r\n'),url=URL.createObjectURL(new Blob([content],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='morpheus-heures-'+payrollMonth+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Récapitulatif mensuel téléchargé');
