@@ -1,6 +1,6 @@
 {
   "_format": "morpheus-planning",
-  "_exportedAt": "2026-09-20T14:43:51.477Z",
+  "_exportedAt": "2026-09-20T16:46:01.486Z",
   "config": {
     "team": "Morpheus Experience",
     "employees": [
@@ -127,7 +127,141 @@
       "branch": "main",
       "path": "planning-data.json"
     },
-    "editPin": "1309"
+    "editPin": "1309",
+    "weekTemplates": {
+      "maxence": [
+        {
+          "role": "Game master",
+          "s1s": "13:30",
+          "s1e": "22:00"
+        },
+        {
+          "role": "Bar",
+          "s2s": "13:30",
+          "s2e": "22:00"
+        },
+        {
+          "role": "Bar",
+          "s1s": "13:30",
+          "s1e": "22:00"
+        },
+        {
+          "role": "Game master",
+          "s1s": "13:30",
+          "s1e": "22:00"
+        },
+        {
+          "role": "Bar/Escape",
+          "s1s": "09:30",
+          "s1e": "14:00"
+        },
+        {
+          "role": "Bar",
+          "s1s": "15:30",
+          "s1e": "00:00"
+        },
+        {
+          "role": "Bar/Escape",
+          "s1s": "09:30",
+          "s1e": "15:45"
+        }
+      ],
+      "damien": [
+        {
+          "role": "Repos"
+        },
+        {
+          "role": "Repos"
+        },
+        {
+          "role": "Repos"
+        },
+        {
+          "role": "Repos"
+        },
+        {
+          "role": "Game master",
+          "s1s": "13:45",
+          "s1e": "23:45"
+        },
+        {
+          "role": "Game master",
+          "s1s": "13:45",
+          "s1e": "23:45"
+        },
+        {
+          "role": "Game master",
+          "s1s": "13:30",
+          "s1e": "21:45"
+        }
+      ],
+      "yousra": [
+        {
+          "role": "Repos"
+        },
+        {
+          "role": "Repos"
+        },
+        {
+          "role": "Repos"
+        },
+        {
+          "role": "Repos"
+        },
+        {
+          "role": "Bar",
+          "s2s": "15:30",
+          "s2e": "00:00"
+        },
+        {
+          "role": "Bar",
+          "s1s": "09:45",
+          "s1e": "15:30"
+        },
+        {
+          "role": "Bar",
+          "s1s": "15:45",
+          "s1e": "21:30"
+        }
+      ],
+      "johan": [
+        {
+          "role": "Bar",
+          "s2s": "13:30",
+          "s2e": "22:00"
+        },
+        {
+          "role": "Game master",
+          "s1s": "13:30",
+          "s1e": "22:00"
+        },
+        {
+          "role": "Game master",
+          "s1s": "13:30",
+          "s1e": "22:00"
+        },
+        {
+          "role": "Bar",
+          "s1s": "13:30",
+          "s1e": "22:00"
+        },
+        {
+          "role": "Bar/Escape",
+          "s1s": "09:30",
+          "s1e": "15:30"
+        },
+        {
+          "role": "Game master",
+          "s1s": "09:45",
+          "s1e": "15:30"
+        },
+        {
+          "role": "Bar/Escape",
+          "s1s": "09:30",
+          "s1e": "13:30"
+        }
+      ]
+    }
   },
   "planning": {
     "damien|2026-07-13": {
@@ -438,11 +572,11 @@
     "damien|2026-08-15": {
       "role": "Bar/Escape",
       "s2s": "14:00",
-      "s2e": "23:30"
+      "s2e": "21:30"
     },
     "yousra|2026-08-15": {
       "role": "Bar",
-      "s1s": "15:00",
+      "s1s": "14:00",
       "s1e": "22:45"
     },
     "yousra|2026-08-16": {
@@ -455,7 +589,7 @@
       "s1s": "",
       "s1e": "",
       "s2s": "15:00",
-      "s2e": "20:15"
+      "s2e": "20:00"
     },
     "damien|2026-08-14": {
       "s2s": "13:30",
@@ -574,11 +708,11 @@
     "yousra|2026-08-23": {
       "role": "Bar",
       "s2s": "15:45",
-      "s2e": "21:45"
+      "s2e": "21:15"
     },
     "damien|2026-08-23": {
       "role": "Game master",
-      "s2e": "22:00",
+      "s2e": "20:00",
       "s2s": "13:00"
     },
     "maxence|2026-08-23": {
@@ -653,7 +787,7 @@
     "damien|2026-08-29": {
       "role": "Game master",
       "s2s": "17:30",
-      "s2e": "23:45"
+      "s2e": "23:30"
     },
     "damien|2026-08-30": {
       "role": "Game master",
@@ -735,7 +869,8 @@
       "s1e": "22:00"
     },
     "yousra|2026-08-31": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-08-13": {
       "role": "Repos"
@@ -777,13 +912,16 @@
       "s1e": "22:00"
     },
     "damien|2026-08-31": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-09-01": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-01": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "johan|2026-09-06": {
       "role": "Game master",
@@ -803,7 +941,7 @@
     "damien|2026-09-06": {
       "role": "Game master",
       "s1s": "15:45",
-      "s1e": "21:45"
+      "s1e": "21:00"
     },
     "maxence|2026-09-05": {
       "role": "Bar/Escape",
@@ -841,12 +979,13 @@
       "s1e": "21:30"
     },
     "yousra|2026-09-02": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-03": {
       "role": "Game master",
       "s1s": "17:30",
-      "s1e": "21:45"
+      "s1e": "21:00"
     },
     "yousra|2026-09-04": {
       "role": "Bar",
@@ -894,22 +1033,28 @@
       "s1e": "22:00"
     },
     "damien|2026-09-07": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-07": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-09-08": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-08": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-09": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-09-09": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-12": {
       "role": "Bar",
@@ -919,12 +1064,12 @@
     "yousra|2026-09-13": {
       "role": "Bar",
       "s1s": "18:00",
-      "s1e": "22:00"
+      "s1e": "20:00"
     },
     "yousra|2026-09-11": {
       "role": "Bar",
       "s1s": "17:45",
-      "s1e": "23:45"
+      "s1e": "23:00"
     },
     "maxence|2026-09-11": {
       "role": "Bar/Escape",
@@ -949,7 +1094,7 @@
     "damien|2026-09-12": {
       "role": "Bar/Escape",
       "s1e": "00:00",
-      "s1s": "14:30"
+      "s1s": "14:00"
     },
     "maxence|2026-09-10": {
       "role": "Game master",
@@ -957,17 +1102,18 @@
       "s1e": "22:00"
     },
     "damien|2026-09-10": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-09-11": {
       "role": "Bar/Escape",
-      "s1s": "14:30",
+      "s1s": "14:00",
       "s1e": "00:00"
     },
     "damien|2026-09-13": {
       "role": "Bar/Escape",
       "s1s": "12:30",
-      "s1e": "22:00"
+      "s1e": "22:30"
     },
     "maxence|2026-09-14": {
       "role": "Bar",
@@ -980,7 +1126,8 @@
       "s1e": "22:00"
     },
     "yousra|2026-09-14": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-18": {
       "role": "Bar",
@@ -1043,22 +1190,28 @@
       "s1e": "16:30"
     },
     "yousra|2026-09-15": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-17": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-16": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-09-15": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-09-16": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-09-17": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-09-18": {
       "role": "Game master",
@@ -1078,7 +1231,7 @@
     "damien|2026-09-20": {
       "role": "Game master",
       "s1s": "13:30",
-      "s1e": "22:00"
+      "s1e": "20:00"
     },
     "johan|2026-09-25": {
       "role": "Bar/Escape",
@@ -1138,7 +1291,7 @@
     "damien|2026-09-21": {
       "role": "Game master",
       "s1s": "13:30",
-      "s1e": "21:45"
+      "s1e": "18:45"
     },
     "damien|2026-09-22": {
       "role": "Game master",
@@ -1146,22 +1299,28 @@
       "s1e": "21:45"
     },
     "damien|2026-09-23": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-23": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-22": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-21": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-24": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-09-24": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-09-26": {
       "role": "Game master",
@@ -1169,7 +1328,8 @@
       "s1s": "15:30"
     },
     "damien|2026-09-25": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "maxence|2026-09-26": {
       "role": "Bar/Escape",
@@ -1207,16 +1367,20 @@
       "s1e": "22:00"
     },
     "damien|2026-09-29": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-29": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-09-30": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-09-30": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "maxence|2026-09-28": {
       "role": "Bar",
@@ -1224,25 +1388,24 @@
       "s1e": "22:00"
     },
     "yousra|2026-09-28": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-09-28": {
-      "s1s": "13:30",
-      "s1e": "21:45",
-      "role": "Game master"
+      "role": "Repos",
+      "_autoRest": true
     },
     "yousra|2026-10-01": {
-      "role": "Bar",
-      "s1s": "13:30",
-      "s1e": "18:00"
+      "role": "Repos",
+      "_autoRest": true
     },
     "maxence|2026-10-01": {
-      "role": "Game master",
-      "s1s": "13:30",
-      "s1e": "22:00"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-10-01": {
-      "role": "Repos"
+      "role": "Repos",
+      "_autoRest": true
     },
     "damien|2026-10-02": {
       "role": "Game master",
@@ -1288,6 +1451,1690 @@
       "role": "Bar/Escape",
       "s1s": "09:30",
       "s1e": "22:00"
+    },
+    "yousra|2026-10-08": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-10-07": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "maxence|2026-10-05": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-10-06": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-10-07": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-10-08": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-10-09": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-10-10": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-10-11": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "22:00"
+    },
+    "damien|2026-10-05": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45",
+      "s2s": "",
+      "s2e": ""
+    },
+    "damien|2026-10-06": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-10-08": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-10-09": {
+      "role": "Game master",
+      "s1s": "15:30",
+      "s1e": "23:45"
+    },
+    "damien|2026-10-10": {
+      "role": "Game master",
+      "s1s": "15:30",
+      "s1e": "23:45"
+    },
+    "damien|2026-10-11": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "yousra|2026-10-05": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-06": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-07": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-09": {
+      "role": "Bar",
+      "s2s": "09:30",
+      "s2e": "18:00"
+    },
+    "yousra|2026-10-10": {
+      "role": "Bar",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "yousra|2026-10-11": {
+      "role": "Bar",
+      "s1s": "09:30",
+      "s1e": "15:15"
+    },
+    "johan|2026-10-06": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-10-07": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-10-08": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "damien|2026-10-27": {},
+    "yousra|2026-10-28": {},
+    "damien|2026-12-04": {
+      "role": "",
+      "s1s": "",
+      "s1e": "",
+      "s2s": "",
+      "s2e": ""
+    },
+    "damien|2026-12-05": {},
+    "damien|2026-12-06": {},
+    "maxence|2026-10-12": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-10-13": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-10-14": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-10-15": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-10-16": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-10-17": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-10-18": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "22:00"
+    },
+    "damien|2026-10-12": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45",
+      "s2s": "",
+      "s2e": ""
+    },
+    "damien|2026-10-13": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-10-14": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-10-15": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-10-16": {
+      "role": "Game master",
+      "s1s": "15:30",
+      "s1e": "23:45"
+    },
+    "damien|2026-10-17": {
+      "role": "Game master",
+      "s1s": "15:30",
+      "s1e": "23:45"
+    },
+    "damien|2026-10-18": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "yousra|2026-10-12": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-13": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-14": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-15": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-16": {
+      "role": "Bar",
+      "s2s": "09:30",
+      "s2e": "18:00"
+    },
+    "yousra|2026-10-17": {
+      "role": "Bar",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "yousra|2026-10-18": {
+      "role": "Bar",
+      "s1s": "09:30",
+      "s1e": "15:15"
+    },
+    "johan|2026-10-13": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-10-14": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-10-15": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-10-19": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-10-20": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-10-21": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-10-22": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-10-23": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-10-24": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-10-25": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "22:00"
+    },
+    "damien|2026-10-19": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "damien|2026-10-20": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-10-21": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-10-22": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-10-23": {
+      "role": "Game master",
+      "s1s": "15:30",
+      "s1e": "23:45"
+    },
+    "damien|2026-10-24": {
+      "role": "Game master",
+      "s1s": "15:30",
+      "s1e": "23:45"
+    },
+    "damien|2026-10-25": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "yousra|2026-10-19": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-20": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-21": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-22": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-23": {
+      "role": "Bar",
+      "s2s": "09:30",
+      "s2e": "18:00"
+    },
+    "yousra|2026-10-24": {
+      "role": "Bar",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "yousra|2026-10-25": {
+      "role": "Bar",
+      "s1s": "09:30",
+      "s1e": "15:15"
+    },
+    "johan|2026-10-20": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-10-21": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-10-22": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-10-26": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-10-27": {
+      "role": "Bar/Escape",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-10-28": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-10-29": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-10-30": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "23:00"
+    },
+    "maxence|2026-10-31": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-11-01": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "13:30"
+    },
+    "damien|2026-10-26": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "damien|2026-10-28": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-10-29": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-10-30": {
+      "role": "Game master",
+      "s1s": "15:30",
+      "s1e": "00:00"
+    },
+    "damien|2026-10-31": {
+      "role": "Game master",
+      "s1s": "15:30",
+      "s1e": "00:00"
+    },
+    "damien|2026-11-01": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "yousra|2026-10-26": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-27": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-29": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-10-30": {
+      "role": "Bar",
+      "s2s": "",
+      "s2e": "",
+      "s1s": "16:30",
+      "s1e": "22:15"
+    },
+    "yousra|2026-10-31": {
+      "role": "Bar",
+      "s1s": "",
+      "s1e": "",
+      "s2s": "16:30",
+      "s2e": "22:15"
+    },
+    "yousra|2026-11-01": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "johan|2026-10-28": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-10-29": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-10-30": {
+      "role": "Bar/Escape",
+      "s1s": "10:00",
+      "s1e": "15:30",
+      "s2s": "17:30",
+      "s2e": "00:00"
+    },
+    "johan|2026-10-31": {
+      "role": "Bar/Escape",
+      "s2s": "17:30",
+      "s2e": "23:00",
+      "s1s": "10:00",
+      "s1e": "15:30"
+    },
+    "johan|2026-11-01": {
+      "role": "Game master",
+      "s1s": "09:30",
+      "s1e": "13:30",
+      "s2s": "",
+      "s2e": ""
+    },
+    "maxence|2026-11-02": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-11-03": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "johan|2026-11-02": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "johan|2026-11-03": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-11-04": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-11-05": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-11-06": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "14:00"
+    },
+    "maxence|2026-11-07": {
+      "role": "Bar",
+      "s1s": "15:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-11-08": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:45"
+    },
+    "damien|2026-11-02": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-03": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-04": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-05": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-06": {
+      "role": "Game master",
+      "s1s": "13:45",
+      "s1e": "23:45"
+    },
+    "damien|2026-11-07": {
+      "role": "Game master",
+      "s1s": "15:30",
+      "s1e": "23:45"
+    },
+    "damien|2026-11-08": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "yousra|2026-11-02": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-03": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-04": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-05": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-06": {
+      "role": "Bar",
+      "s2s": "15:30",
+      "s2e": "00:00"
+    },
+    "yousra|2026-11-07": {
+      "role": "Bar",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "yousra|2026-11-08": {
+      "role": "Bar",
+      "s1s": "15:45",
+      "s1e": "21:30"
+    },
+    "johan|2026-11-04": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-11-05": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-11-06": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:30",
+      "s2s": "",
+      "s2e": ""
+    },
+    "johan|2026-11-07": {
+      "role": "Game master",
+      "s1s": "09:45",
+      "s1e": "15:30",
+      "s2s": "",
+      "s2e": ""
+    },
+    "johan|2026-11-08": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "13:30",
+      "s2s": "",
+      "s2e": ""
+    },
+    "maxence|2026-11-09": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-11-10": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-11-11": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-11-12": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-11-13": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "14:00"
+    },
+    "maxence|2026-11-14": {
+      "role": "Bar",
+      "s1s": "15:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-11-15": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:45"
+    },
+    "damien|2026-11-09": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-10": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-11": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-12": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-13": {
+      "role": "Game master",
+      "s1s": "13:45",
+      "s1e": "23:45"
+    },
+    "damien|2026-11-14": {
+      "role": "Game master",
+      "s1s": "15:30",
+      "s1e": "23:45"
+    },
+    "damien|2026-11-15": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "yousra|2026-11-09": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-10": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-11": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-12": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-13": {
+      "role": "Bar",
+      "s2s": "15:30",
+      "s2e": "00:00"
+    },
+    "yousra|2026-11-14": {
+      "role": "Bar",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "yousra|2026-11-15": {
+      "role": "Bar",
+      "s1s": "15:45",
+      "s1e": "21:30"
+    },
+    "johan|2026-11-09": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "johan|2026-11-10": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-11-11": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-11-12": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-11-13": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:30"
+    },
+    "johan|2026-11-14": {
+      "role": "Game master",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "johan|2026-11-15": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "13:30"
+    },
+    "maxence|2026-11-16": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-11-17": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-11-18": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-11-19": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-11-20": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "14:00"
+    },
+    "maxence|2026-11-21": {
+      "role": "Bar",
+      "s1s": "15:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-11-22": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:45"
+    },
+    "damien|2026-11-16": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-17": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-18": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-19": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-20": {
+      "role": "Game master",
+      "s1s": "13:45",
+      "s1e": "23:45"
+    },
+    "damien|2026-11-21": {
+      "role": "Game master",
+      "s1s": "15:30",
+      "s1e": "23:45"
+    },
+    "damien|2026-11-22": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "yousra|2026-11-16": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-17": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-18": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-19": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-20": {
+      "role": "Bar",
+      "s2s": "15:30",
+      "s2e": "00:00"
+    },
+    "yousra|2026-11-21": {
+      "role": "Bar",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "yousra|2026-11-22": {
+      "role": "Bar",
+      "s1s": "15:45",
+      "s1e": "21:30"
+    },
+    "johan|2026-11-16": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "johan|2026-11-17": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-11-18": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-11-19": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-11-20": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:30"
+    },
+    "johan|2026-11-21": {
+      "role": "Game master",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "johan|2026-11-22": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "13:30"
+    },
+    "maxence|2026-11-23": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-11-24": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-11-25": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-11-26": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-11-27": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "14:00"
+    },
+    "maxence|2026-11-28": {
+      "role": "Bar",
+      "s1s": "15:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-11-29": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:45"
+    },
+    "damien|2026-11-23": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-24": {
+      "role": "Créa-maintenance",
+      "s1s": "14:00",
+      "s1e": "18:00",
+      "s2s": "",
+      "s2e": ""
+    },
+    "damien|2026-11-25": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-26": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-11-27": {
+      "role": "Game master",
+      "s1s": "13:45",
+      "s1e": "23:45"
+    },
+    "damien|2026-11-28": {
+      "role": "Game master",
+      "s1s": "13:45",
+      "s1e": "23:45"
+    },
+    "damien|2026-11-29": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "yousra|2026-11-23": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-24": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-25": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-26": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-11-27": {
+      "role": "Bar",
+      "s2s": "15:30",
+      "s2e": "00:00"
+    },
+    "yousra|2026-11-28": {
+      "role": "Bar",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "yousra|2026-11-29": {
+      "role": "Bar",
+      "s1s": "15:45",
+      "s1e": "21:30"
+    },
+    "johan|2026-11-23": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "johan|2026-11-24": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-11-25": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-11-26": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-11-27": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:30"
+    },
+    "johan|2026-11-28": {
+      "role": "Game master",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "johan|2026-11-29": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "13:30"
+    },
+    "johan|2026-10-27": {
+      "role": "Game master",
+      "s1s": "",
+      "s1e": "",
+      "s2s": "",
+      "s2e": ""
+    },
+    "maxence|2026-12-04": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-12-05": {
+      "role": "Bar/Escape",
+      "s2s": "09:30",
+      "s2e": "15:30"
+    },
+    "maxence|2026-12-06": {
+      "role": "Bar/Escape",
+      "s2s": "15:30",
+      "s2e": "22:00"
+    },
+    "johan|2026-12-04": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:30"
+    },
+    "johan|2026-12-05": {
+      "role": "Bar/Escape",
+      "s2e": "",
+      "s2s": "",
+      "s1s": "09:30",
+      "s1e": "00:00"
+    },
+    "johan|2026-12-06": {
+      "role": "Bar/Escape",
+      "s2e": "15:30",
+      "s2s": "09:30"
+    },
+    "yousra|2026-12-05": {
+      "role": "Bar",
+      "s1s": "15:30",
+      "s1e": "23:45"
+    },
+    "yousra|2026-12-06": {
+      "role": "Bar",
+      "s1e": "21:45",
+      "s1s": "17:45"
+    },
+    "yousra|2026-12-04": {
+      "role": "Bar",
+      "s1s": "16:00",
+      "s1e": "23:45"
+    },
+    "maxence|2026-11-30": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00",
+      "s2s": "",
+      "s2e": ""
+    },
+    "maxence|2026-12-01": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-12-02": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "maxence|2026-12-03": {
+      "role": "Game master",
+      "s2s": "16:30",
+      "s2e": "22:00"
+    },
+    "damien|2026-11-30": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00",
+      "s2s": "",
+      "s2e": ""
+    },
+    "damien|2026-12-01": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-02": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00",
+      "s2s": "",
+      "s2e": ""
+    },
+    "damien|2026-12-03": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00",
+      "s2s": "",
+      "s2e": ""
+    },
+    "yousra|2026-11-30": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-01": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-02": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-03": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "johan|2026-11-30": {
+      "role": "Repos",
+      "s2s": "",
+      "s2e": "",
+      "s1s": "",
+      "s1e": "",
+      "_autoRest": true
+    },
+    "johan|2026-12-01": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-12-02": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-12-03": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "18:30",
+      "s1s": "",
+      "s1e": ""
+    },
+    "maxence|2026-12-07": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-12-08": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-12-09": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-12-10": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-12-11": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "14:00"
+    },
+    "maxence|2026-12-12": {
+      "role": "Bar",
+      "s1s": "15:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-12-13": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:45"
+    },
+    "damien|2026-12-07": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-08": {
+      "role": "Créa-maintenance",
+      "s1s": "14:00",
+      "s1e": "18:00",
+      "s2s": "",
+      "s2e": ""
+    },
+    "damien|2026-12-09": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-10": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-11": {
+      "role": "Game master",
+      "s1s": "13:45",
+      "s1e": "23:45"
+    },
+    "damien|2026-12-12": {
+      "role": "Game master",
+      "s1s": "13:45",
+      "s1e": "23:45"
+    },
+    "damien|2026-12-13": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "yousra|2026-12-07": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-08": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-09": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-10": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-11": {
+      "role": "Bar",
+      "s2s": "15:30",
+      "s2e": "00:00"
+    },
+    "yousra|2026-12-12": {
+      "role": "Bar",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "yousra|2026-12-13": {
+      "role": "Bar",
+      "s1s": "15:45",
+      "s1e": "21:30"
+    },
+    "johan|2026-12-07": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "johan|2026-12-08": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-12-09": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-12-10": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-12-11": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:30"
+    },
+    "johan|2026-12-12": {
+      "role": "Game master",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "johan|2026-12-13": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "13:30"
+    },
+    "maxence|2026-12-14": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-12-15": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-12-16": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-12-17": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-12-18": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "14:00"
+    },
+    "maxence|2026-12-19": {
+      "role": "Bar",
+      "s1s": "15:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-12-20": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:45"
+    },
+    "damien|2026-12-14": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-15": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-16": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-17": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-18": {
+      "role": "Game master",
+      "s1s": "13:45",
+      "s1e": "23:45"
+    },
+    "damien|2026-12-19": {
+      "role": "Game master",
+      "s1s": "13:45",
+      "s1e": "23:45"
+    },
+    "damien|2026-12-20": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "yousra|2026-12-14": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-15": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-16": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-17": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-18": {
+      "role": "Bar",
+      "s2s": "15:30",
+      "s2e": "00:00"
+    },
+    "yousra|2026-12-19": {
+      "role": "Bar",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "yousra|2026-12-20": {
+      "role": "Bar",
+      "s1s": "15:45",
+      "s1e": "21:30"
+    },
+    "johan|2026-12-14": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "johan|2026-12-15": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-12-16": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-12-17": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-12-18": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:30"
+    },
+    "johan|2026-12-19": {
+      "role": "Game master",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "johan|2026-12-20": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "13:30"
+    },
+    "maxence|2026-12-21": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-12-22": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-12-23": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-12-24": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-12-25": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "14:00"
+    },
+    "maxence|2026-12-26": {
+      "role": "Bar",
+      "s1s": "15:30",
+      "s1e": "00:00"
+    },
+    "maxence|2026-12-27": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:45"
+    },
+    "damien|2026-12-21": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-22": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-23": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-24": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-25": {
+      "role": "Game master",
+      "s1s": "13:45",
+      "s1e": "23:45"
+    },
+    "damien|2026-12-26": {
+      "role": "Game master",
+      "s1s": "13:45",
+      "s1e": "23:45"
+    },
+    "damien|2026-12-27": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "yousra|2026-12-21": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-22": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-23": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-24": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-25": {
+      "role": "Bar",
+      "s2s": "15:30",
+      "s2e": "00:00"
+    },
+    "yousra|2026-12-26": {
+      "role": "Bar",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "yousra|2026-12-27": {
+      "role": "Bar",
+      "s1s": "15:45",
+      "s1e": "21:30"
+    },
+    "johan|2026-12-21": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "johan|2026-12-22": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-12-23": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-12-24": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-12-25": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:30"
+    },
+    "johan|2026-12-26": {
+      "role": "Game master",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "johan|2026-12-27": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "13:30"
+    },
+    "maxence|2026-12-28": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-12-29": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "maxence|2026-12-30": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2026-12-31": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "maxence|2027-01-01": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "maxence|2027-01-02": {
+      "role": "Bar",
+      "s1s": "19:30",
+      "s1e": "00:00"
+    },
+    "maxence|2027-01-03": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "15:45"
+    },
+    "damien|2026-12-28": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-29": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-30": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2026-12-31": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2027-01-01": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "damien|2027-01-02": {
+      "role": "Game master",
+      "s1s": "13:45",
+      "s1e": "23:45"
+    },
+    "damien|2027-01-03": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "21:45"
+    },
+    "yousra|2026-12-28": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-29": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-30": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2026-12-31": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2027-01-01": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "yousra|2027-01-02": {
+      "role": "Bar",
+      "s1s": "09:45",
+      "s1e": "19:30"
+    },
+    "yousra|2027-01-03": {
+      "role": "Bar",
+      "s1s": "15:45",
+      "s1e": "21:30"
+    },
+    "johan|2026-12-28": {
+      "role": "Bar",
+      "s2s": "13:30",
+      "s2e": "22:00"
+    },
+    "johan|2026-12-29": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-12-30": {
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2026-12-31": {
+      "role": "Bar",
+      "s1s": "13:30",
+      "s1e": "22:00"
+    },
+    "johan|2027-01-01": {
+      "role": "Repos",
+      "_autoRest": true
+    },
+    "johan|2027-01-02": {
+      "role": "Game master",
+      "s1s": "09:45",
+      "s1e": "15:30"
+    },
+    "johan|2027-01-03": {
+      "role": "Bar/Escape",
+      "s1s": "09:30",
+      "s1e": "13:30"
     }
   },
   "absences": {
@@ -1358,6 +3205,145 @@
     "johan|2026-10-25": "AB",
     "johan|2026-10-26": "AB",
     "johan|2026-10-27": "AB",
-    "johan|2026-09-19": "AB"
+    "johan|2026-09-19": "AB",
+    "damien|2026-09-30": "RH",
+    "damien|2026-09-29": "RH",
+    "damien|2026-10-06": "RH",
+    "damien|2026-10-07": "RH",
+    "damien|2026-10-08": "RH",
+    "yousra|2026-10-05": "RH",
+    "yousra|2026-10-06": "RH",
+    "yousra|2026-10-07": "RH",
+    "yousra|2026-10-08": "RH",
+    "damien|2026-10-27": "RH",
+    "yousra|2026-10-28": "RH",
+    "damien|2026-12-04": "CP",
+    "damien|2026-12-05": "RH",
+    "damien|2026-12-06": "RH",
+    "damien|2026-10-13": "RH",
+    "damien|2026-10-14": "RH",
+    "damien|2026-10-15": "RH",
+    "yousra|2026-10-12": "RH",
+    "yousra|2026-10-13": "RH",
+    "yousra|2026-10-14": "RH",
+    "yousra|2026-10-15": "RH",
+    "damien|2026-10-20": "RH",
+    "damien|2026-10-21": "RH",
+    "damien|2026-10-22": "RH",
+    "yousra|2026-10-19": "RH",
+    "yousra|2026-10-20": "RH",
+    "yousra|2026-10-21": "RH",
+    "yousra|2026-10-22": "RH",
+    "damien|2026-10-28": "RH",
+    "damien|2026-10-29": "RH",
+    "yousra|2026-10-26": "RH",
+    "yousra|2026-10-27": "RH",
+    "yousra|2026-10-29": "RH",
+    "damien|2026-11-03": "RH",
+    "damien|2026-11-04": "RH",
+    "damien|2026-11-05": "RH",
+    "yousra|2026-11-02": "RH",
+    "yousra|2026-11-03": "RH",
+    "yousra|2026-11-04": "RH",
+    "yousra|2026-11-05": "RH",
+    "damien|2026-11-02": "RH",
+    "damien|2026-11-09": "RH",
+    "damien|2026-11-10": "RH",
+    "damien|2026-11-11": "RH",
+    "damien|2026-11-12": "RH",
+    "yousra|2026-11-09": "RH",
+    "yousra|2026-11-10": "RH",
+    "yousra|2026-11-11": "RH",
+    "yousra|2026-11-12": "RH",
+    "damien|2026-11-16": "RH",
+    "damien|2026-11-17": "RH",
+    "damien|2026-11-18": "RH",
+    "damien|2026-11-19": "RH",
+    "yousra|2026-11-16": "RH",
+    "yousra|2026-11-17": "RH",
+    "yousra|2026-11-18": "RH",
+    "yousra|2026-11-19": "RH",
+    "damien|2026-11-23": "RH",
+    "damien|2026-11-25": "RH",
+    "damien|2026-11-26": "RH",
+    "yousra|2026-11-23": "RH",
+    "yousra|2026-11-24": "RH",
+    "yousra|2026-11-25": "RH",
+    "yousra|2026-11-26": "RH",
+    "damien|2026-09-28": "RH",
+    "yousra|2026-09-28": "RH",
+    "yousra|2026-09-29": "RH",
+    "yousra|2026-09-30": "RH",
+    "damien|2026-09-25": "RH",
+    "damien|2026-09-24": "RH",
+    "damien|2026-09-23": "RH",
+    "yousra|2026-09-24": "RH",
+    "yousra|2026-09-23": "RH",
+    "yousra|2026-09-22": "RH",
+    "yousra|2026-09-21": "RH",
+    "damien|2026-09-15": "RH",
+    "damien|2026-09-16": "RH",
+    "damien|2026-09-17": "RH",
+    "yousra|2026-09-14": "RH",
+    "yousra|2026-09-15": "RH",
+    "yousra|2026-09-16": "RH",
+    "yousra|2026-09-17": "RH",
+    "damien|2026-09-07": "RH",
+    "damien|2026-09-08": "RH",
+    "damien|2026-09-09": "RH",
+    "damien|2026-09-10": "RH",
+    "yousra|2026-09-09": "RH",
+    "yousra|2026-09-08": "RH",
+    "yousra|2026-09-07": "RH",
+    "damien|2026-09-01": "RH",
+    "damien|2026-08-31": "RH",
+    "yousra|2026-08-31": "RH",
+    "yousra|2026-09-01": "RH",
+    "yousra|2026-09-02": "RH",
+    "maxence|2026-10-01": "RH",
+    "damien|2026-10-01": "RH",
+    "yousra|2026-10-01": "RH",
+    "damien|2026-12-01": "RH",
+    "yousra|2026-11-30": "RH",
+    "yousra|2026-12-01": "RH",
+    "yousra|2026-12-02": "RH",
+    "yousra|2026-12-03": "RH",
+    "johan|2026-11-30": "RH",
+    "maxence|2026-12-02": "RH",
+    "damien|2026-12-07": "RH",
+    "damien|2026-12-09": "RH",
+    "damien|2026-12-10": "RH",
+    "yousra|2026-12-07": "RH",
+    "yousra|2026-12-08": "RH",
+    "yousra|2026-12-09": "RH",
+    "yousra|2026-12-10": "RH",
+    "damien|2026-12-14": "RH",
+    "damien|2026-12-15": "RH",
+    "damien|2026-12-16": "RH",
+    "damien|2026-12-17": "RH",
+    "yousra|2026-12-14": "RH",
+    "yousra|2026-12-15": "RH",
+    "yousra|2026-12-16": "RH",
+    "yousra|2026-12-17": "RH",
+    "damien|2026-12-21": "RH",
+    "damien|2026-12-22": "RH",
+    "damien|2026-12-23": "RH",
+    "damien|2026-12-24": "RH",
+    "yousra|2026-12-21": "RH",
+    "yousra|2026-12-22": "RH",
+    "yousra|2026-12-23": "RH",
+    "yousra|2026-12-24": "RH",
+    "damien|2026-12-28": "RH",
+    "damien|2026-12-29": "RH",
+    "damien|2026-12-30": "RH",
+    "damien|2026-12-31": "RH",
+    "yousra|2026-12-28": "RH",
+    "yousra|2026-12-29": "RH",
+    "yousra|2026-12-30": "RH",
+    "yousra|2026-12-31": "RH",
+    "maxence|2027-01-01": "RH",
+    "damien|2027-01-01": "RH",
+    "yousra|2027-01-01": "RH",
+    "johan|2027-01-01": "RH"
   }
 }
