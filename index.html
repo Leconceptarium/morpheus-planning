@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+.payroll-table{border-collapse:collapse;width:100%;min-width:850px;font-size:.85rem}.payroll-table th,.payroll-table td{padding:10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}.payroll-table th{background:var(--vellum-2)}.payroll-table td:nth-child(n+2):nth-child(-n+6){white-space:nowrap}.payroll-table small{white-space:normal;color:var(--ink-soft)}.payroll-table details p{min-width:180px}input[type="month"]{font:inherit;padding:7px;border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--ink)}
+
 .balance-detail{display:flex;gap:16px;flex-wrap:wrap}.balance-detail span{display:flex;flex-direction:column}.audit-warning{color:#973c32}.day-edit{font-size:.75rem;justify-content:center}.day-times{display:grid;grid-template-columns:1fr 1fr;gap:12px}#quickDialog label,#pl-hours details label{display:block;margin:10px 0}#quickDialog select,#quickDialog input[type="time"]{display:block;width:100%}#quickDialog .proposal{display:flex;gap:12px;border-bottom:1px solid var(--line);padding:10px 0}#quickDialog .proposal input{flex:none}#quickDialog{max-width:660px}#pl-hours summary{cursor:pointer}#pl-hours .toolbar{box-shadow:none}button:focus-visible{outline:3px solid var(--gilt);outline-offset:2px}
 
 /* ============================================================
@@ -292,7 +294,7 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
     <div class="pl-mobile" id="pl-grid-mobile"></div>
     <section class="recap admin-only" id="pl-hours-wrap">
       <h2>Suivi des heures par équipier</h2>
-      <p class="hint">Calcul détaillé depuis l’embauche pour Damien et Yousra. Maxence et Johan : heures informatives, sans solde contractuel.</p>
+      <p class="hint">Écarts par semaine et récapitulatif mensuel pour la comptable. Nouveau départ au 1er septembre 2026 ; aucun report des mois précédents.</p>
       <div class="hour-cards" id="pl-hours"></div>
     </section>
     <section class="recap">
@@ -753,51 +755,7 @@ const Planning=(function(){
 
   function render(){renderToolbar();renderGrid();renderMobile();renderHoursRecap();renderRecap();setEditing(document.body.classList.contains('editing'));}
 
-  function renderHoursRecap(){
-    const wrap=document.getElementById('pl-hours');
-    if(!wrap)return;
-    const weekSun=addDays(weekStart,6);
-    let html='';
-    Data.config.employees.forEach(emp=>{
-      const hasC=typeof emp.contract==='number'&&emp.contract>0;
-      const wk=totalMinutesForRange(emp.id,weekStart,weekSun);
-      const beforeHire=hasC&&emp.start&&weekSun<parseISO(emp.start);
-
-      let contractLine,balanceHtml='';
-      if(!hasC){
-        contractLine=`<span class="hc-note">Pas de contrat suivi pour cette personne.</span>`;
-      }else if(beforeHire){
-        contractLine=`<span class="hc-note">Pas encore embauché·e à cette date.</span>`;
-      }else{
-        contractLine=`<span class="hc-contract">Contrat : ${emp.contract} h / semaine${emp.start?` · depuis le ${formatDateFr(parseISO(emp.start))}`:''}</span>`;
-        if(emp.start){
-          // Solde depuis l'embauche jusqu'à la fin de la semaine affichée : heures faites moins
-          // heures dues au contrat (mensualisées, méthode des trentièmes comme la fiche de paie).
-          // Comme ça part de la date d'embauche, ce solde inclut automatiquement tous les mois
-          // précédents — pas besoin d'aller chercher le mois d'avant pour savoir où on en est.
-          // Affiché arrondi au multiple de 5 minutes : les 1-4 min d'écart ne sont que du bruit
-          // d'arrondi de calcul, pas un vrai déséquilibre à surveiller.
-          const total=cumulativeBalanceMinutes(emp,weekSun);
-          balanceHtml=`<div class="hc-balance">${balanceSentence(emp.name,roundToStep(total))}</div>`;
-        }else{
-          balanceHtml=`<div class="hc-balance"><span class="hc-note">Renseigne sa date d'embauche (Réglages → Équipe) pour voir son solde.</span></div>`;
-        }
-      }
-
-      html+=`<div class="hour-card">
-        <div class="hc-top">
-          <span class="hc-who">${escapeHtml(emp.name)}</span>
-          ${contractLine}
-        </div>
-        <div class="hc-mid">
-          <span class="hc-week-label">Cette semaine</span>
-          <span class="hc-week-val">${fmtHM(roundToStep(wk),true)}</span>
-        </div>
-        ${balanceHtml}
-      </div>`;
-    });
-    wrap.innerHTML=html||`<p class="hint">Ajoute des équipiers dans les Réglages pour voir leur suivi ici.</p>`;
-  }
+  function renderHoursRecap(){renderReliableHours();}
 
   function renderMobile(){
     const wrap=document.getElementById('pl-grid-mobile');
@@ -1171,21 +1129,81 @@ function analysisFor(emp,to,method){
   return {worked,credited,expected,adjustment,missing,pending,anomalies,balance:worked+credited+adjustment-expected};
 }
 function signed(n){return (n<0?'−':n>0?'+':'')+fmtHM(Math.abs(n));}
-let cutoff=isoDate(new Date()),referenceMethod=lsGet('morpheus_reference_v2','weekly');
-function renderReliableHours(){
-  const wrap=document.getElementById('pl-hours');
-  wrap.innerHTML=`<div class="toolbar"><label for="balanceDate">Calcul jusqu’au</label><input type="date" id="balanceDate" value="${cutoff}"><label for="referenceMethod">Référence</label><select id="referenceMethod"><option value="weekly">Contrat hebdomadaire, prorata calendaire</option><option value="monthly">Mensualisation, prorata calendaire</option></select></div><p class="hint">Écart de suivi = horaires enregistrés + crédits d’absence + ajustement − référence. Une journée vide reste à vérifier. Les horaires futurs sont prévisionnels. Ce compteur ne détermine pas automatiquement une dette d’heures ou la paie.</p>`;
-  const to=parseISO(cutoff);
-  for(const e of Data.config.employees){
-    if(!(e.contract>0)||!e.start){wrap.innerHTML+=`<article class="hour-card"><b>${escapeHtml(e.name)}</b><p>Heures informatives · aucun solde contractuel suivi.</p></article>`;continue;}
-    const a=analysisFor(e,to,referenceMethod);
-    wrap.innerHTML+=`<article class="hour-card"><div class="hc-top"><span class="hc-who">${escapeHtml(e.name)}</span><span>${e.contract} h / semaine · depuis le ${formatDateFr(parseISO(e.start))}</span></div><div class="balance-detail"><span>Horaires enregistrés <b>${fmtHM(a.worked)}</b></span><span>Crédits d’absence <b>${fmtHM(a.credited)}</b></span><span>Référence <b>${fmtHM(a.expected)}</b></span><span>Ajustement <b>${signed(a.adjustment)}</b></span></div><p class="bal-pill ${a.balance<0?'bal-owe':'bal-give'}">Écart ${cutoff>isoDate(new Date())?'prévisionnel':'enregistré'} : <b>${signed(a.balance)}</b></p>${a.missing||a.pending||a.anomalies?`<p class="audit-warning">À vérifier : ${a.missing} jour(s) sans saisie, ${a.pending} absence(s) sans crédit défini, ${a.anomalies} anomalie(s). Solde provisoire.</p>`:''}<details><summary>Ajustement documenté du compteur</summary><p class="hint">En minutes, positif ou négatif. Les horaires historiques sont conservés.</p><label>Minutes <input type="number" data-adjust="${e.id}" value="${a.adjustment}"></label><label>Motif <input type="text" data-note="${e.id}" value="${escapeHtml(e.balanceNote||'')}" placeholder="Ex. report validé avec le comptable"></label><button data-saveadjust="${e.id}">Enregistrer l’ajustement</button></details></article>`;
+/* Suivi hebdomadaire, arrêté mensuel indépendant à partir du 1er septembre. */
+const PAYROLL_START='2026-09-01';
+let payrollMonth=isoDate(new Date()).slice(0,7);
+function calendarDays(from,to){return Math.round((Date.UTC(to.getFullYear(),to.getMonth(),to.getDate())-Date.UTC(from.getFullYear(),from.getMonth(),from.getDate()))/86400000)+1;}
+function weeklyPayroll(emp,monday,today=isoDate(new Date())){
+  const sunday=addDays(monday,6),end=isoDate(sunday),week=isoDate(monday);
+  const start=[week,PAYROLL_START,emp.start||PAYROLL_START].sort().pop();
+  if(start>end||!(emp.contract>0))return null;
+  const days=calendarDays(parseISO(start),sunday),fullTarget=Math.round(emp.contract*60);
+  const referenceKey=emp.id+'|'+week,manual=Data.config.weeklyReferences?.[referenceKey];
+  const reference=Number.isInteger(manual?.minutes)&&manual.minutes>=0?manual.minutes:fullTarget;
+  let worked=0,credit=0;const warnings=[];
+  for(let d=parseISO(start);d<=sunday;d=addDays(d,1)){
+    const date=isoDate(d),key=emp.id+'|'+date,e=Data.planning[key],abs=Data.absences[key];
+    const issues=entryIssues(e);issues.forEach(issue=>warnings.push(date+' : '+issue));
+    if(!abs&&(!e||(!e.role&&!dayMinutes(e))))warnings.push(date+' : journée non renseignée');
+    else if(!abs&&e?.role&&e.role!=='Repos'&&!dayMinutes(e)&&!issues.length)warnings.push(date+' : poste sans horaires');
+    if(abs&&dayMinutes(e)>0)warnings.push(date+' : absence et horaires à vérifier');
+    if(abs&&!['RH','AB','VOLO'].includes(abs)&&!Number.isFinite(e?.absenceCredit))warnings.push(date+' : crédit '+abs+' à confirmer');
+    worked+=workedDayMinutes(emp.id,date);credit+=creditFor(key);
   }
-  document.getElementById('referenceMethod').value=referenceMethod;
-  document.getElementById('balanceDate').onchange=e=>{if(validISO(e.target.value)){cutoff=e.target.value;renderReliableHours();}};
-  document.getElementById('referenceMethod').onchange=e=>{referenceMethod=e.target.value;lsSet('morpheus_reference_v2',referenceMethod);renderReliableHours();};
-  wrap.querySelectorAll('[data-saveadjust]').forEach(b=>b.onclick=()=>{if(!document.body.classList.contains('editing'))return;const id=b.dataset.saveadjust,n=Number(wrap.querySelector(`[data-adjust="${id}"]`).value),note=wrap.querySelector(`[data-note="${id}"]`).value.trim();if(!Number.isFinite(n)||!Number.isInteger(n)||!note){toast('Indiquez un nombre entier de minutes et un motif.');return;}checkpoint();const emp=Data.config.employees.find(x=>x.id===id);emp.balanceAdjustment=n;emp.balanceNote=note;persist();});
+  const diff=worked+credit-reference;
+  return {week,start,end,worked,credit,reference,diff,extra:Math.max(0,diff),shortfall:Math.max(0,-diff),warnings,closed:end<today,partial:days<7,manualNote:manual?.note||'',month:end.slice(0,7)};
 }
+function monthPayroll(emp,month,today=isoDate(new Date())){
+  if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(month))return [];
+  const first=parseISO(month+'-01'),last=new Date(first.getFullYear(),first.getMonth()+1,0),rows=[];
+  for(let monday=mondayOf(first);monday<=last;monday=addDays(monday,7)){
+    const r=weeklyPayroll(emp,monday,today);if(r&&r.month===month)rows.push(r);
+  }
+  return rows;
+}
+function payrollTotals(rows){
+  return rows.reduce((a,r)=>{if(r.closed&&!r.warnings.length){a.extra+=r.extra;a.shortfall+=r.shortfall;a.weeks++;}else if(r.closed){a.unresolved++;}else a.upcoming++;return a;},{extra:0,shortfall:0,weeks:0,unresolved:0,upcoming:0});
+}
+function payrollPeriod(r){return formatDateFr(parseISO(r.start))+' au '+formatDateFr(parseISO(r.end));}
+function renderReliableHours(){
+  const wrap=document.getElementById('pl-hours');if(!wrap)return;
+  const date=document.getElementById('pl-picker').value,week=mondayOf(validISO(date)?parseISO(date):new Date());
+  let html=`<div class="toolbar"><label for="payrollMonth">Mois pour la comptable</label><input type="month" id="payrollMonth" min="2026-09" value="${payrollMonth}"><button id="exportPayroll">Exporter le récapitulatif CSV</button></div><p class="hint"><b>Nouveau départ au 1er septembre 2026 : report antérieur de 0 h.</b> Les horaires anciens restent dans l’historique. Calcul du lundi au dimanche, puis addition des heures en plus pour le mois du dimanche. Les semaines en dessous du contrat sont indiquées séparément et ne réduisent pas les heures en plus. Chaque mois repart sans report.</p>`;
+  for(const emp of Data.config.employees){
+    const totalWeek=totalMinutesForRange(emp.id,week,addDays(week,6));
+    if(!(emp.contract>0)){html+=`<article class="hour-card"><div class="hc-top"><span class="hc-who">${escapeHtml(emp.name)}</span><span>Semaine affichée : ${fmtHM(totalWeek)}</span></div><p class="hint">Heures informatives, sans objectif contractuel.</p></article>`;continue;}
+    const current=weeklyPayroll(emp,week),rows=monthPayroll(emp,payrollMonth),totals=payrollTotals(rows);
+    html+=`<article class="hour-card"><div class="hc-top"><span class="hc-who">${escapeHtml(emp.name)}</span><span>Contrat : ${emp.contract} h / semaine</span></div>`;
+    if(current){html+=`<div class="hc-mid"><span>Semaine affichée : <b>${fmtHM(current.worked)}</b> saisies${current.credit?' + '+fmtHM(current.credit)+' créditées':''} / <b>${fmtHM(current.reference)}</b> de référence</span></div><p>${current.diff>0?'<b>'+fmtHM(current.extra)+'</b> en plus sur cette semaine':current.diff<0?'<b>'+fmtHM(current.shortfall)+'</b> en dessous de la référence cette semaine':'Semaine à l’équilibre'}${!current.closed?' · semaine en cours ou à venir, hors total mensuel arrêté':''}.</p>`;}
+    else html+='<p class="hint">Avant le début du suivi : horaires conservés, aucun report dans le nouveau compteur.</p>';
+    html+=`<p class="bal-pill bal-give"><b>${fmtHM(totals.extra)}</b> en plus à transmettre pour ${escapeHtml(payrollMonth)} · ${totals.weeks} semaine(s) terminée(s) sans alerte</p><p class="hint">Semaines terminées avant aujourd’hui uniquement. ${totals.unresolved} semaine(s) à vérifier ; ${totals.upcoming} en cours ou à venir. Écarts en dessous de la référence : ${fmtHM(totals.shortfall)}, sans déduction du total en plus. Les heures sont à qualifier et à valoriser par la comptable.</p><div class="scroll-x"><table class="payroll-table"><thead><tr><th>Semaine</th><th>Horaires</th><th>Crédits</th><th>Référence</th><th>En plus</th><th>En dessous</th><th>État</th></tr></thead><tbody>`;
+    for(const r of rows){html+=`<tr><td>${escapeHtml(payrollPeriod(r))}${r.partial?'<br><small>Début du suivi en cours de semaine : contrat hebdomadaire conservé</small>':''}${r.manualNote?'<br><small>'+escapeHtml(r.manualNote)+'</small>':''}<br><button data-weekref="${emp.id}|${r.week}" class="ghost">Ajuster la référence</button></td><td>${fmtHM(r.worked)}</td><td>${fmtHM(r.credit)}</td><td>${fmtHM(r.reference)}</td><td>${fmtHM(r.extra)}</td><td>${fmtHM(r.shortfall)}</td><td>${r.warnings.length?'<details><summary class="audit-warning">'+r.warnings.length+' point(s) à vérifier</summary>'+r.warnings.map(w=>'<p>'+escapeHtml(w)+'</p>').join('')+'</details>':r.closed?'À transmettre':'Prévisionnel'}${r.warnings.length&&!r.closed?'<br>Prévisionnel':''}</td></tr>`;}
+    html+=`</tbody></table></div>${rows.length?'':'<p>Aucune semaine dans ce mois après le début du suivi.</p>'}</article>`;
+  }
+  wrap.innerHTML=html;
+  document.getElementById('payrollMonth').onchange=e=>{if(/^\d{4}-(0[1-9]|1[0-2])$/.test(e.target.value)&&e.target.value>='2026-09'){payrollMonth=e.target.value;renderReliableHours();}};
+  document.getElementById('exportPayroll').onclick=exportPayroll;
+  wrap.querySelectorAll('[data-weekref]').forEach(button=>button.onclick=()=>editWeeklyReference(button.dataset.weekref));
+}
+function editWeeklyReference(key){
+  if(!document.body.classList.contains('editing'))return;
+  const [id,date]=key.split('|'),emp=Data.config.employees.find(e=>e.id===id),r=weeklyPayroll(emp,parseISO(date));if(!r)return;
+  const dlg=quickDialog('Référence de la semaine · '+emp.name),body=dlg.querySelector('.sheet-body');
+  body.innerHTML=`<form><p>${escapeHtml(payrollPeriod(r))}</p><p class="hint">Contrat habituel : ${emp.contract} h / semaine. Ajustez seulement si une référence différente a été convenue, notamment pour la semaine partielle du 1er septembre.</p><label>Heures<input name="hours" type="number" min="0" max="168" step="1" value="${Math.floor(r.reference/60)}" required></label><label>Minutes<input name="minutes" type="number" min="0" max="59" step="1" value="${r.reference%60}" required></label><label>Motif<input name="note" type="text" value="${escapeHtml(r.manualNote)}" required></label><button type="submit">Enregistrer</button><button type="button" id="resetWeekReference">Rétablir la référence automatique</button></form>`;
+  const form=body.querySelector('form');form.onsubmit=e=>{e.preventDefault();const h=+form.elements.hours.value,m=+form.elements.minutes.value,note=form.elements.note.value.trim();if(!Number.isInteger(h)||!Number.isInteger(m)||h<0||h>168||m<0||m>59||!note)return;checkpoint();Data.config.weeklyReferences=Data.config.weeklyReferences||{};Data.config.weeklyReferences[key]={minutes:h*60+m,note};persist();dlg.close();};
+  body.querySelector('#resetWeekReference').onclick=()=>{checkpoint();if(Data.config.weeklyReferences)delete Data.config.weeklyReferences[key];persist();dlg.close();};dlg.showModal();
+}
+function exportPayroll(){
+  const rows=[['Mois','Équipier','Début suivi semaine','Fin semaine','Horaires (minutes)','Crédits absence (minutes)','Référence (minutes)','En plus (minutes)','En dessous (minutes)','État','Remarques']];
+  for(const emp of Data.config.employees.filter(e=>e.contract>0)){
+    const weeks=monthPayroll(emp,payrollMonth),totals=payrollTotals(weeks);
+    for(const r of weeks)rows.push([payrollMonth,emp.name,r.start,r.end,r.worked,r.credit,r.reference,r.extra,r.shortfall,r.warnings.length?'À vérifier — hors total':r.closed?'À transmettre':'Prévisionnel — hors total',[...r.warnings,r.partial?'Début du suivi en cours de semaine : référence hebdomadaire conservée':'',r.manualNote].filter(Boolean).join(' / ')]);
+    rows.push([payrollMonth,emp.name,'TOTAL TERMINÉ SANS ALERTE','','','','',totals.extra,totals.shortfall,'Pas de compensation entre semaines','Report antérieur au 01/09/2026 : 0 minute. Aucun report entre mois.']);
+  }
+  const quote=value=>'"'+String(value).replace(/^[=+@-]/,"'$&").replace(/"/g,'""')+'"';
+  const content='\uFEFF'+rows.map(row=>row.map(quote).join(';')).join('\r\n'),url=URL.createObjectURL(new Blob([content],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='morpheus-heures-'+payrollMonth+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Récapitulatif mensuel téléchargé');
+}
+
 function quickDialog(title){let dlg=document.getElementById('quickDialog');if(!dlg){dlg=document.createElement('dialog');dlg.id='quickDialog';dlg.className='sheet';document.body.append(dlg);}dlg.innerHTML=`<div class="sheet-head"><h3>${escapeHtml(title)}</h3><button class="ghost" data-close aria-label="Fermer">✕</button></div><div class="sheet-body"></div>`;dlg.querySelector('[data-close]').onclick=()=>dlg.close();return dlg;}
 function openDay(key){
   if(!document.body.classList.contains('editing'))return;
