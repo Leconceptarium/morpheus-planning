@@ -1,6 +1,6 @@
 {
   "_format": "morpheus-planning",
-  "_exportedAt": "2026-10-16T10:41:09.407Z",
+  "_exportedAt": "2026-10-16T18:33:03.897Z",
   "config": {
     "team": "Morpheus Experience",
     "employees": [
@@ -2381,9 +2381,9 @@
       "_autoRest": true
     },
     "damien|2026-11-24": {
-      "role": "Créa-maintenance",
-      "s1s": "14:00",
-      "s1e": "18:00",
+      "role": "Game master",
+      "s1s": "13:30",
+      "s1e": "19:45",
       "s2s": "",
       "s2e": ""
     },
@@ -2397,12 +2397,12 @@
     },
     "damien|2026-11-27": {
       "role": "Game master",
-      "s1s": "13:45",
+      "s1s": "15:45",
       "s1e": "23:45"
     },
     "damien|2026-11-28": {
       "role": "Game master",
-      "s1s": "13:45",
+      "s1s": "15:30",
       "s1e": "23:45"
     },
     "damien|2026-11-29": {
@@ -2448,7 +2448,7 @@
     },
     "johan|2026-11-24": {
       "role": "Game master",
-      "s1s": "13:30",
+      "s1s": "19:30",
       "s1e": "22:00"
     },
     "johan|2026-11-25": {
@@ -2464,7 +2464,7 @@
     "johan|2026-11-27": {
       "role": "Bar/Escape",
       "s1s": "09:30",
-      "s1e": "15:30"
+      "s1e": "15:45"
     },
     "johan|2026-11-28": {
       "role": "Game master",
@@ -2679,7 +2679,7 @@
     },
     "damien|2026-12-12": {
       "role": "Game master",
-      "s1s": "13:45",
+      "s1s": "15:30",
       "s1e": "23:45"
     },
     "damien|2026-12-13": {
@@ -2793,7 +2793,7 @@
     },
     "damien|2026-12-15": {
       "role": "Game master",
-      "s1s": "15:30",
+      "s1s": "13:30",
       "s1e": "21:45",
       "s2s": "",
       "s2e": ""
@@ -2815,7 +2815,7 @@
     },
     "damien|2026-12-19": {
       "role": "Game master",
-      "s1s": "13:45",
+      "s1s": "15:30",
       "s1e": "23:45"
     },
     "damien|2026-12-20": {
@@ -2860,9 +2860,8 @@
       "s2e": "22:00"
     },
     "johan|2026-12-15": {
-      "role": "Game master",
-      "s1s": "13:30",
-      "s1e": "15:30"
+      "role": "Repos",
+      "_autoRest": true
     },
     "johan|2026-12-16": {
       "role": "Game master",
@@ -2930,7 +2929,7 @@
     "damien|2026-12-22": {
       "role": "Game master",
       "s1s": "13:30",
-      "s1e": "17:30",
+      "s1e": "22:00",
       "s2s": "",
       "s2e": ""
     },
@@ -2949,7 +2948,7 @@
     },
     "damien|2026-12-26": {
       "role": "Game master",
-      "s1s": "13:45",
+      "s1s": "15:30",
       "s1e": "23:45"
     },
     "damien|2026-12-27": {
@@ -2994,9 +2993,8 @@
       "s2e": "22:00"
     },
     "johan|2026-12-22": {
-      "role": "Game master",
-      "s1s": "17:30",
-      "s1e": "22:00"
+      "role": "Repos",
+      "_autoRest": true
     },
     "johan|2026-12-23": {
       "role": "Game master",
@@ -3015,7 +3013,7 @@
     "johan|2026-12-26": {
       "role": "Game master",
       "s1s": "09:45",
-      "s1e": "13:45"
+      "s1e": "15:30"
     },
     "johan|2026-12-27": {
       "role": "Bar/Escape",
@@ -3360,6 +3358,8 @@
     "yousra|2026-12-24": "RH",
     "damien|2026-12-18": "RH",
     "maxence|2026-12-17": "RH",
-    "maxence|2026-12-03": "RH"
+    "maxence|2026-12-03": "RH",
+    "johan|2026-12-22": "RH",
+    "johan|2026-12-15": "RH"
   }
 }
