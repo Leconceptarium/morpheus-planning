@@ -38,7 +38,7 @@ body{
 }
 /* masthead */
 .masthead{border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel),transparent);}
-.masthead-inner{max-width:1180px;margin:0 auto;padding:20px 24px 14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.masthead-inner{max-width:1800px;margin:0 auto;padding:20px 16px 14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
 .crest{width:42px;height:42px;flex:0 0 42px;color:var(--gilt);}
 .brand{display:flex;flex-direction:column;line-height:1.1;}
 .brand .name{font-family:var(--font-display);font-weight:600;font-size:1.55rem;letter-spacing:.01em;color:var(--ink);}
@@ -51,7 +51,7 @@ body{
 .nav button:hover{color:var(--ink);background:var(--vellum-2);}
 .nav button.active{color:var(--ink);background:var(--panel);border-color:var(--line);box-shadow:var(--shadow);}
 /* page */
-.page{max-width:1180px;margin:0 auto;padding:22px 24px 80px;}
+.page{width:100%;max-width:1800px;margin:0 auto;padding:22px 16px 80px;}
 .view{display:none;}
 .view.active{display:block;}
 .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px;}
@@ -86,7 +86,7 @@ body.editing .toggle-edit .dot{background:#8bbf86;}
 .toggle-edit .state{font-size:.78rem;font-weight:700;color:var(--ink-soft);}
 /* grille planning */
 .scroll-x{overflow-x:auto;border-radius:var(--radius);}
-.grid{--col-name:168px;--col-tot:116px;min-width:920px;display:grid;grid-template-columns:var(--col-name) repeat(7,minmax(108px,1fr)) var(--col-tot);background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.grid{--col-name:145px;--col-tot:100px;min-width:980px;display:grid;grid-template-columns:var(--col-name) repeat(7,minmax(105px,1fr)) var(--col-tot);background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
 .cell{border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);}
 .grid .cell:nth-child(9n){border-right:none;}
 .head-cell{padding:10px 8px;background:var(--vellum-2);border-bottom:1px solid var(--line);text-align:center;}
@@ -168,6 +168,12 @@ body.editing .toggle-edit .dot{background:#8bbf86;}
 .foot-cell.grand{background:var(--ink);color:var(--panel);font-family:var(--font-display);font-size:1.15rem;}
 body:not(.editing) .role-select,body:not(.editing) .shift input{pointer-events:none;}
 body:not(.editing) .shift.empty{display:none;}
+/* Consultation : horaires lisibles sur Chrome/Windows sans les contrôles natifs encombrants */
+.shift .time-read{display:none;}
+body:not(.editing) .grid .shift input[type="time"]{display:none;}
+body:not(.editing) .grid .shift .time-read{display:inline;flex:1;min-width:0;text-align:center;white-space:nowrap;font-size:.81rem;font-weight:700;font-variant-numeric:tabular-nums;}
+body:not(.editing) .grid .shift{justify-content:center;gap:3px;}
+@media(max-width:1050px) and (min-width:641px){.page{padding-left:8px;padding-right:8px}.grid{--col-name:128px;--col-tot:88px;min-width:900px;grid-template-columns:var(--col-name) repeat(7,minmax(97px,1fr)) var(--col-tot)}.day-cell{padding:7px 4px}}
 body:not(.editing) .role-select:not(.has-role){display:none;}
 /* récap fioles */
 .recap{margin-top:30px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px 8px;}
@@ -862,6 +868,13 @@ const Planning=(function(){
       html+=`<div class="cell foot-cell">${fmtHM(sum,true)}</div>`;});
     html+=`<div class="cell foot-cell grand">${fmtHM(grand)}</div>`;
     grid.innerHTML=html;
+    // Les <input type=time> sont larges sous Windows : doublure texte en consultation.
+    grid.querySelectorAll('.shift input[type="time"]').forEach(input=>{
+      const value=document.createElement('span');
+      value.className='time-read';
+      value.textContent=input.value||'—';
+      input.insertAdjacentElement('afterend',value);
+    });
     grid.querySelectorAll('.day-cell').forEach(cellEl=>{
       const key=cellEl.dataset.key;
       cellEl.querySelectorAll('[data-f]').forEach(input=>{
