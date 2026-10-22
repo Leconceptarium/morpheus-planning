@@ -1,6 +1,6 @@
 {
   "_format": "morpheus-planning",
-  "_exportedAt": "2026-10-22T12:40:02.171Z",
+  "_exportedAt": "2026-10-22T12:44:42.294Z",
   "config": {
     "team": "Morpheus Experience",
     "employees": [
@@ -2926,8 +2926,8 @@
     },
     "damien|2026-12-22": {
       "role": "Game master",
-      "s1s": "13:30",
-      "s1e": "22:00",
+      "s1s": "13:45",
+      "s1e": "21:45",
       "s2s": "",
       "s2e": ""
     },
@@ -2946,7 +2946,7 @@
     },
     "damien|2026-12-26": {
       "role": "Game master",
-      "s1s": "15:30",
+      "s1s": "15:45",
       "s1e": "23:45"
     },
     "damien|2026-12-27": {
@@ -3011,7 +3011,7 @@
     "johan|2026-12-26": {
       "role": "Game master",
       "s1s": "09:45",
-      "s1e": "15:30"
+      "s1e": "15:45"
     },
     "johan|2026-12-27": {
       "role": "Bar/Escape",
