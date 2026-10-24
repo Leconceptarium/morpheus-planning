@@ -1,6 +1,6 @@
 {
   "_format": "morpheus-planning",
-  "_exportedAt": "2026-10-22T13:06:54.729Z",
+  "_exportedAt": "2026-10-24T18:37:07.182Z",
   "config": {
     "team": "Morpheus Experience",
     "employees": [
@@ -1781,8 +1781,8 @@
     },
     "yousra|2026-10-24": {
       "role": "Bar",
-      "s1s": "09:45",
-      "s1e": "15:30"
+      "s1s": "09:30",
+      "s1e": "15:45"
     },
     "yousra|2026-10-25": {
       "role": "Bar",
