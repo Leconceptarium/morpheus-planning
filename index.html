@@ -302,7 +302,7 @@ dialog.sheet::backdrop{background:rgba(59,50,71,.34);}
     <div class="pl-mobile" id="pl-grid-mobile"></div>
     <section class="recap admin-only" id="pl-hours-wrap">
       <h2>Pour la comptable · heures du mois</h2>
-      <p class="hint">Heures du 1er au dernier jour du mois, comparées au contrat mensualisé (heures par semaine × 52 ÷ 12).</p>
+      <p class="hint">Heures du 1er au dernier jour du mois, comparées au contrat mensualisé (heures par semaine × 52 ÷ 12). Le CSV détaille les jours et les semaines du lundi au dimanche. Les heures des journées passées correspondent aux heures réellement effectuées saisies par la direction. Le calcul des majorations est indicatif.</p>
       <div class="hour-cards" id="pl-hours"></div>
     </section>
     <section class="recap">
@@ -1205,7 +1205,7 @@ function renderReliableHours(){
   const wrap=document.getElementById('pl-hours');if(!wrap)return;
   const date=document.getElementById('pl-picker').value,week=mondayOf(validISO(date)?parseISO(date):new Date());
   renderWeeklyGuide(week);
-  let html=`<div class="toolbar"><label for="payrollMonth">Mois civil</label><input type="month" id="payrollMonth" value="${payrollMonth}"><button id="exportPayroll">Télécharger pour la comptable (CSV)</button></div>`;
+  let html=`<div class="toolbar"><label for="payrollMonth">Mois civil</label><input type="month" id="payrollMonth" value="${payrollMonth}"><button id="exportPayroll">Exporter le détail par jour et semaine (CSV)</button></div>`;
   for(const emp of Data.config.employees.filter(e=>e.contract>0)){
     const s=monthSummary(emp,payrollMonth),ok=s.diff>=0;
     const msg=s.diff===0?'Heures du mois exactement atteintes.'
@@ -1221,15 +1221,64 @@ function renderReliableHours(){
   document.getElementById('exportPayroll').onclick=exportPayroll;
 }
 function exportPayroll(){
-  const rows=[['Mois','Équipier','Heures faites ou prévues (minutes)','Contrat du mois (minutes)','Écart (minutes)','Résultat']];
+  const first=parseISO(payrollMonth+'-01'),last=new Date(first.getFullYear(),first.getMonth()+1,0),today=isoDate(new Date());
+  const firstISO=isoDate(first),lastISO=isoDate(last),fmt=n=>(n/60).toFixed(2).replace('.',',');
+  const rows=[['Équipier','Ligne','Date','Jour','Semaine du','Semaine au','Début 1','Fin 1','Début 2','Fin 2','Heures prévues (h, planning)','Heures réellement effectuées (h)','Crédit absence (h)','Contrat semaine (h)','Total semaine effectué (h)','Complémentaires jour (h, indicatif)','Dont +10% jour','Dont +25% jour','Complémentaires semaine (h, indicatif)','Dont +10% semaine','Dont +25% semaine','Mois de paie HC','Absence','Observations']];
   for(const emp of Data.config.employees.filter(e=>e.contract>0)){
-    const s=monthSummary(emp,payrollMonth);
-    rows.push([payrollMonth,emp.name,s.done,s.expected,s.diff,s.diff>=0?'Heures faites':'Heures manquantes']);
+    const contract=Math.round(emp.contract*60),limit10=Math.round(contract/10);
+    for(let monDate=mondayOf(first);monDate<=last;monDate=addDays(monDate,7)){
+      const sunDate=addDays(monDate,6),mon=isoDate(monDate),sun=isoDate(sunDate);
+      if(emp.start&&emp.start>sun)continue;
+      const start=emp.start&&emp.start>mon?emp.start:mon;
+      const partial=start!==mon;
+      const normal=partial?Math.round(contract*calendarDays(parseISO(start),sunDate)/7):contract;
+      const manual=Data.config.weeklyReferences?.[emp.id+'|'+mon];
+      const reference=Number.isInteger(manual?.minutes)&&manual.minutes>=0?manual.minutes:normal;
+      const payMonth=sun.slice(0,7);
+      let cumulative=0,workedWeek=0,creditWeek=0;
+      const warnings=[];
+      for(let dateObj=new Date(monDate);dateObj<=sunDate;dateObj=addDays(dateObj,1)){
+        const date=isoDate(dateObj),key=emp.id+'|'+date,entry=Data.planning[key]||{},absence=Data.absences[key]||'';
+        const employed=date>=start;
+        const planned=employed?dayMinutes(entry):0,worked=employed?workedDayMinutes(emp.id,date):0,credit=employed?creditFor(key):0;
+        const before=Math.max(0,cumulative-reference),after=Math.max(0,cumulative+worked-reference);
+        const extraDay=after-before,extra10Day=Math.max(0,Math.min(after,limit10)-Math.min(before,limit10));
+        cumulative+=worked;workedWeek+=worked;creditWeek+=credit;
+        const issues=employed?entryIssues(entry):[];
+        if(employed&&date<=today&&!absence&&!entry.role&&!planned)issues.push('Jour non renseigné, vérifier repos');
+        if(employed&&absence&&planned)issues.push('Absence avec horaires');
+        if(employed&&absence&&!['RH','AB','VOLO'].includes(absence)&&!Number.isFinite(entry.absenceCredit))issues.push('Crédit absence non confirmé');
+        if(issues.length)warnings.push(date+' : '+issues.join(' / '));
+        if(date<firstISO||date>lastISO)continue;
+        const note=[date>=today?'Journée en cours ou future : prévision':'Heures réellement effectuées, renseignées par la direction',...issues].join(' ; ');
+        rows.push([emp.name,'JOUR',date,FR_DAYS[(dateObj.getDay()+6)%7],mon,sun,entry.s1s||'',entry.s1e||'',entry.s2s||'',entry.s2e||'',fmt(planned),fmt(worked),fmt(credit),'','',fmt(extraDay),fmt(extra10Day),fmt(extraDay-extra10Day),'','','',payMonth,absence,note]);
+      }
+      const extra=Math.max(0,workedWeek-reference),extra10=Math.min(extra,limit10);
+      const notes=[];
+      if(sun>=today)notes.push('Semaine non clôturée : une partie des heures est encore prévisionnelle');
+      if(payMonth!==payrollMonth)notes.push('Semaine à cheval : heures complémentaires à payer en '+payMonth);
+      if(mon.slice(0,7)!==payrollMonth)notes.push('Total incluant des jours du mois précédent');
+      if(partial)notes.push('Référence proratisée en semaine d’embauche : à valider');
+      if(manual)notes.push('Référence hebdomadaire manuelle');
+      if(creditWeek)notes.push('Crédits d’absence exclus des heures complémentaires indicatives');
+      if(workedWeek>=35*60)notes.push('Durée à vérifier pour un temps partiel');
+      if(extra>Math.round(contract/3))notes.push('Dépassement du tiers du contrat : à vérifier');
+      if(warnings.length)notes.push(warnings.length+' anomalie(s) : '+[...new Set(warnings)].slice(0,4).join(' / '));
+      notes.push('Calcul indicatif des majorations, à valider par la comptabilité');
+      rows.push([emp.name,'TOTAL SEMAINE','','',mon,sun,'','','','','','',fmt(creditWeek),fmt(reference),fmt(workedWeek),'','','',fmt(extra),fmt(extra10),fmt(extra-extra10),payMonth,'',notes.join(' ; ')]);
+    }
   }
-  const quote=v=>'"'+String(v).replace(/"/g,'""')+'"';
-  const url=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.map(quote).join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'}));
-  const a=document.createElement('a');a.href=url;a.download='morpheus-heures-'+payrollMonth+'.csv';a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Récapitulatif téléchargé');
+  const quote=value=>{
+    let cell=String(value??'');
+    if(/^[=+@\t\r]/.test(cell))cell="'"+cell;
+    return '"'+cell.replace(/"/g,'""')+'"';
+  };
+  const csv='\uFEFF'+rows.map(row=>row.map(quote).join(';')).join('\r\n');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  const a=document.createElement('a');a.href=url;a.download='morpheus-paie-detail-'+payrollMonth+'.csv';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast('Détail quotidien et hebdomadaire téléchargé');
 }
 
 function quickDialog(title){let dlg=document.getElementById('quickDialog');if(!dlg){dlg=document.createElement('dialog');dlg.id='quickDialog';dlg.className='sheet';document.body.append(dlg);}dlg.innerHTML=`<div class="sheet-head"><h3>${escapeHtml(title)}</h3><button class="ghost" data-close aria-label="Fermer">✕</button></div><div class="sheet-body"></div>`;dlg.querySelector('[data-close]').onclick=()=>dlg.close();return dlg;}
