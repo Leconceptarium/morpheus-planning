@@ -1,6 +1,6 @@
 {
   "_format": "morpheus-planning",
-  "_exportedAt": "2026-11-21T17:45:40.158Z",
+  "_exportedAt": "2026-11-21T18:52:27.711Z",
   "config": {
     "team": "Morpheus Experience",
     "employees": [
@@ -2924,8 +2924,8 @@
     },
     "maxence|2026-12-26": {
       "role": "Bar",
-      "s1s": "15:15",
-      "s1e": "00:00"
+      "s1s": "09:30",
+      "s1e": "19:30"
     },
     "maxence|2026-12-27": {
       "role": "Bar/Escape",
